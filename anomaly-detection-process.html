@@ -22,19 +22,28 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+  <meta name="description" content="本文主要内容为对时序数据异常检测流程进行简单介绍，然后通过项目实战进行详细解释。全文内容根据个人实际经验所得。 1.总体流程介绍针对项目中传感器数据异常检测，经调研后，个人初步总结工程上实现异常检测的流程。流程框图如下图所示：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/hello-world.html">
+<meta property="og:title" content="时序数据异常检测流程与项目实战">
+<meta property="og:url" content="http://example.com/anomaly-detection-process.html">
 <meta property="og:site_name" content="home-laser">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta property="og:description" content="本文主要内容为对时序数据异常检测流程进行简单介绍，然后通过项目实战进行详细解释。全文内容根据个人实际经验所得。 1.总体流程介绍针对项目中传感器数据异常检测，经调研后，个人初步总结工程上实现异常检测的流程。流程框图如下图所示：">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-02T13:01:58.316Z">
-<meta property="article:modified_time" content="2022-03-20T13:40:23.997Z">
+<meta property="og:image" content="http://example.com/img/Anomaly_detection_process_img/Anomaly_detection_process.jpg">
+<meta property="og:image" content="http://example.com/img/Anomaly_detection_process_img/componet.jpg">
+<meta property="og:image" content="http://example.com/img/Anomaly_detection_process_img/componet_index.jpg">
+<meta property="og:image" content="http://example.com/img/Anomaly_detection_process_img/componet_resampling.jpg">
+<meta property="og:image" content="http://example.com/img/Anomaly_detection_process_img/componet_resampling_visualization.jpg">
+<meta property="article:published_time" content="2022-03-25T12:23:25.727Z">
+<meta property="article:modified_time" content="2022-03-25T14:26:26.557Z">
 <meta property="article:author" content="laser">
+<meta property="article:tag" content="时序数据">
+<meta property="article:tag" content="异常处理">
+<meta property="article:tag" content="机器学习">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/Anomaly_detection_process_img/Anomaly_detection_process.jpg">
 
-<link rel="canonical" href="http://example.com/hello-world.html">
+<link rel="canonical" href="http://example.com/anomaly-detection-process.html">
 
 
 <script id="page-configurations">
@@ -47,7 +56,7 @@
   };
 </script>
 
-  <title>Hello World | home-laser</title>
+  <title>时序数据异常检测流程与项目实战 | home-laser</title>
   
 
 
@@ -197,7 +206,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/hello-world.html">
+    <link itemprop="mainEntityOfPage" href="http://example.com/anomaly-detection-process.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -210,7 +219,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          时序数据异常检测流程与项目实战
         </h1>
 
         <div class="post-meta">
@@ -219,16 +228,19 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2022-03-02 21:01:58" itemprop="dateCreated datePublished" datetime="2022-03-02T21:01:58+08:00">2022-03-02</time>
+              <time title="创建时间：2022-03-25 20:23:25 / 修改时间：22:26:26" itemprop="dateCreated datePublished" datetime="2022-03-25T20:23:25+08:00">2022-03-25</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-20 21:40:23" itemprop="dateModified" datetime="2022-03-20T21:40:23+08:00">2022-03-20</time>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
               </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -246,8 +258,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/hello-world.html#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/hello-world.html" itemprop="commentCount"></span>
+    <a title="valine" href="/anomaly-detection-process.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/anomaly-detection-process.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,19 +274,53 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.<br> <span id="more"></span></p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></tbody></table></figure>
+        <p>本文主要内容为对时序数据异常检测流程进行简单介绍，然后通过项目实战进行详细解释。全文内容根据个人实际经验所得。</p>
+<h1 id="1-总体流程介绍"><a href="#1-总体流程介绍" class="headerlink" title="1.总体流程介绍"></a>1.总体流程介绍</h1><p>针对项目中传感器数据异常检测，经调研后，个人初步总结工程上实现异常检测的流程。流程框图如下图所示：<br> <span id="more"></span>  </p>
+<div align="center">
+<img src="../img/Anomaly_detection_process_img/Anomaly_detection_process.jpg" width="60%/">
+</div>  
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></tbody></table></figure>
+<p>总体步骤有五步：  </p>
+<ol>
+<li>数据预处理：对数据做初步处理，方便后续的数据分析。包括时间戳的转换（因为是时序数据，需要对时间列做专门处理）、数据重采样（数据量较大时采用，减少数据量同时能统一时间间隔）、缺失值处理  </li>
+<li>探索性数据分析EDA：通过作图、制表、方程拟合、计算特征量等手段探索数据的结构和规律的一种数据分析方法。主要是利用各种方式自由探索数据分布、数据相关性等。</li>
+<li>特征提取/相关性分析：对于单维序列，因为缺乏可用特征，需要进行特征提取，以便后续训练模型，时序序列中比较重要的特征是周比环比。对于多维序列，需要先进行相关性分析，剔除相关性强的数据。</li>
+<li>训练模型：对数据分析后选择合适的算法进行建模，用提取出的特征或若相关数据进行模型训练。</li>
+<li>异常检测：利用训练好的模型检测实际数据。单维常用算法有LSTM + Vae，通过预测的方式检测异常；多维可利用孤立森林、SVM、kmeans等。</li>
+</ol>
+<h1 id="2-项目实战"><a href="#2-项目实战" class="headerlink" title="2.项目实战"></a>2.项目实战</h1><p>利用工具：jupyter notebook; 语言：python</p>
+<h2 id="2-1-数据预处理"><a href="#2-1-数据预处理" class="headerlink" title="2.1 数据预处理"></a>2.1 数据预处理</h2><p>实现目标：提取csv文件数据，减少数据量，处理缺失值，并进行可视化。<br>首先加载必要库:</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np </span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">import</span> random <span class="keyword">as</span> rd </span><br><span class="line"><span class="keyword">import</span> datetime </span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt </span><br><span class="line"><span class="keyword">import</span> matplotlib.dates <span class="keyword">as</span> mdate</span><br><span class="line"><span class="keyword">import</span> warnings</span><br><span class="line">warnings.filterwarnings(<span class="string">"ignore"</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>提取csv文件,利用pd.read_csv()函数可完整提取表中全部内容，函数有很多参数可以选择，实现众多功能</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#读取表格数据</span></span><br><span class="line">data1 = pd.read_csv(<span class="string">'./data/componet.csv'</span>)</span><br><span class="line">data2 = pd.read_csv(<span class="string">'./data/tehu.csv'</span>)</span><br><span class="line">data1 <span class="comment">#展示data1中数据</span></span><br></pre></td></tr></tbody></table></figure>
+<p>表格数据如图所示：</p>
+<div align="center">
+<img src="../img/Anomaly_detection_process_img/componet.jpg" width="60%/">
+</div>  
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></tbody></table></figure>
+<p>将data1中时间列数据设置为索引，方便查询，也方便可视化</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data1.index = pd.to_datetime(data1.Datetime) <span class="comment">#设置时间列为索引</span></span><br><span class="line">data1</span><br></pre></td></tr></tbody></table></figure>
+<p>设置完后数据：</p>
+<div align="center">
+<img src="../img/Anomaly_detection_process_img/componet_index.jpg" width="60%/">
+</div>  
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></tbody></table></figure>
+<p>在这里，我的数据有一百万，采样间隔大致为2s，间隔太短且不均匀，数据量又太大，因此对其进行重采样，设置1min间隔，取平均值。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#重采样 </span></span><br><span class="line">tmp_data1 = data1.resample(<span class="string">'1T'</span>).mean() <span class="comment">#时间间隔取1min，mean()取平均值,用tmp_data1接收转换后的表，不改变原表内容</span></span><br><span class="line">tmp_data1</span><br></pre></td></tr></tbody></table></figure>
+<p>重采样后的数据：</p>
+<div align="center">
+<img src="../img/Anomaly_detection_process_img/componet_resampling.jpg" width="60%/">
+</div>  
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p>可以看出，数据时间间隔已变为1min等距，且值也有所变化。然后对其进行可视化。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#可视化</span></span><br><span class="line"><span class="keyword">for</span> c_disc <span class="keyword">in</span> [<span class="string">'Comp0_Te'</span>,<span class="string">'Comp1_Te'</span>]:</span><br><span class="line">    t_disc = tmp_data1[c_disc]</span><br><span class="line">    plt.figure(figsize=(<span class="number">120</span>,<span class="number">10</span>))</span><br><span class="line">    plt.title(c_disc)    </span><br><span class="line">    plt.ylabel(c_disc)    </span><br><span class="line">    plt.gca().xaxis.set_major_formatter(mdate.DateFormatter(<span class="string">'%Y-%m-%d'</span>))  <span class="comment">#设置x轴显示格式</span></span><br><span class="line">    <span class="comment">#设置x轴显示范围，freq代表间隔频率，tmp_data1.index[0]代表起始时间,tmp_data1.index[-1]代表结束时间</span></span><br><span class="line">    plt.xticks(pd.date_range(tmp_data1.index[<span class="number">0</span>],tmp_data1.index[-<span class="number">1</span>],freq=<span class="string">'D'</span>),rotation=<span class="number">45</span>) </span><br><span class="line">    plt.plot(t_disc)</span><br></pre></td></tr></tbody></table></figure>
+<p>结果如图：</p>
+<div align="center">
+<img src="../img/Anomaly_detection_process_img/componet_resampling_visualization.jpg" width="60%/">
+</div> 
+------  
+
+<p>未完待续</p>
 
     </div>
 
@@ -283,17 +329,22 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE/" rel="tag"># 时序数据</a>
+              <a href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" rel="tag"># 异常处理</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
 
         
 
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/machine-learning-notes.html" rel="next" title="机器学习笔记">
-      机器学习笔记 <i class="fa fa-chevron-right"></i>
+    <a href="/compilation-process.html" rel="prev" title="c/c++编译流程">
+      <i class="fa fa-chevron-left"></i> c/c++编译流程
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -353,7 +404,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%80%BB%E4%BD%93%E6%B5%81%E7%A8%8B%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">1.总体流程介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">2.项目实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 数据预处理</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
