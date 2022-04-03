@@ -187,65 +187,28 @@
                         
                     </div>
                     <div class="meta-info">
-                        .article-meta-info {
-  font-size: 0.8rem;
-  color: var(--third-text-color);
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2022-03-02 21:01:58</span>
+        <span class="mobile">2022-03-02 21:01</span>
+    </span>
+    
+    
 
-  .article-meta-item {
-    margin-right: 10px;
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-
-  .article-date {
-
-    .mobile {
-      display: none;
-    }
-
-    +keep-tablet() {
-      .pc {
-        display: none;
-      }
-
-      .mobile {
-        display: inline;
-      }
-    }
-
-  }
-
-
-  .article-tags, .article-categories {
-    display: inline;
-
-    ul, li {
-      display: inline;
-    }
-
-    a {
-      color: var(--third-text-color);
-
-      &:hover {
-        color: var(--primary-color);
-      }
-    }
-  }
-
-  .article-tags {
-    +keep-tablet() {
-      display: none;
-    }
-  }
-
-  .article-min2read, .article-wordcount {
-    +keep-mobile() {
-      display: none;
-    }
-  }
-}
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>73 字</span>
+        </span>
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
 
                     </div>
                 </div>
@@ -276,6 +239,7 @@
         <li>本文标题：Hello World</li>
         <li>本文作者：EasyBoy</li>
         <li>创建时间：2022-03-02 21:01:58</li>
+        <li>更新时间：2022-03-20 21:40:23</li>
         <li>
             本文链接：https://easyboy-blog.com/hello-world.html
         </li>
