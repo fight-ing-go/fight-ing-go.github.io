@@ -187,58 +187,65 @@
                         
                     </div>
                     <div class="meta-info">
-                        <div class="article-meta-info">
-    <span class="article-date article-meta-item">
-        <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2022-03-25 20:23:25</span>
-        <span class="mobile">2022-03-25 20:23</span>
-    </span>
-    
-        <span class="article-categories article-meta-item">
-            <i class="fas fa-folder"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-    
-        <span class="article-tags article-meta-item">
-            <i class="fas fa-tags"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE/">时序数据</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">异常处理</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
+                        .article-meta-info {
+  font-size: 0.8rem;
+  color: var(--third-text-color);
 
-    
-    
-        <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>2.9k 字</span>
-        </span>
-    
-    
-    
-        <span class="article-pv article-meta-item">
-            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
-    
-</div>
+  .article-meta-item {
+    margin-right: 10px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .article-date {
+
+    .mobile {
+      display: none;
+    }
+
+    +keep-tablet() {
+      .pc {
+        display: none;
+      }
+
+      .mobile {
+        display: inline;
+      }
+    }
+
+  }
+
+
+  .article-tags, .article-categories {
+    display: inline;
+
+    ul, li {
+      display: inline;
+    }
+
+    a {
+      color: var(--third-text-color);
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  .article-tags {
+    +keep-tablet() {
+      display: none;
+    }
+  }
+
+  .article-min2read, .article-wordcount {
+    +keep-mobile() {
+      display: none;
+    }
+  }
+}
 
                     </div>
                 </div>
@@ -319,15 +326,10 @@ tmp_data1
 </code></pre>
 <p>重采样后的数据：</p>
 <div align="center">
-<img src="../img/Anomaly_detection_process_img/componet_resample.jpg" width="60%/">
+<img src="../img/Anomaly_detection_process_img/componet_resample.jpg" width="100%/">
 </div>  
 
-<p>可以看出，数据时间间隔已变为2S等距，且值也有所变化，因为非等距时间间隔，不可避免地出现了缺失值。同样的对其进行可视化。结果如图：</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/componet_resampling_visualization.jpg" width="60%/">
-</div>  
-
-<p>因此下一步对缺失值进行填补。填补策略为：对短时间缺失数据填补，长时间缺失数据删除。填补使用缺失点前7个历史数据的均值填补，以是否连续缺失十个点判断是否是长时间缺失数据。这里自己写了个填补函数用于实现上面的功能。（对于几百万的数据量，填补时间很长，有一两小时）</p>
+<p>可以看出，数据时间间隔已变为2S等距，且值也有所变化，因为非等距时间间隔，不可避免地出现了缺失值。因此下一步对缺失值进行填补。填补策略为：对短时间缺失数据填补，长时间缺失数据删除。填补使用缺失点前7个历史数据的均值填补，以是否连续缺失十个点判断是否是长时间缺失数据。这里自己写了个填补函数用于实现上面的功能。（对于几百万的数据量，填补时间很长，有一两小时）</p>
 <pre class=" language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">nmeans_fill_missing</span><span class="token punctuation">(</span>fill_col<span class="token punctuation">,</span> df <span class="token punctuation">,</span> window<span class="token operator">=</span><span class="token number">7</span><span class="token punctuation">,</span> time_range <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
         <span class="token triple-quoted-string string">'''
         实现功能： 对表格中的某一列的缺失值进行填补，使用邻近历史数据的均值填补，对于大范围缺失点，不进行填补，可对均值窗口、缺失时间范围进行设置
@@ -393,11 +395,6 @@ tmp_data1
     tmp_data1 <span class="token operator">=</span> nmeans_fill_missing<span class="token punctuation">(</span>c_disc<span class="token punctuation">,</span> tmp_data1<span class="token punctuation">,</span> window<span class="token operator">=</span><span class="token number">7</span><span class="token punctuation">)</span>
 tmp_data1
 </code></pre>
-<p>同样的，查看可视化结果：</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/componet_Missing_value_filling.jpg" width="60%/">
-</div>  
-
 <p>为了检验填补效果，又写了个子函数，用来获取每次检测到的长间隔时间端的开始时间和结束时间对于的行数。根据返回的结果，查询对应的时间信息，判断是否满足填补策略</p>
 <pre class=" language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">find_long_missing</span><span class="token punctuation">(</span>fill_col<span class="token punctuation">,</span> df <span class="token punctuation">,</span> time_range <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
         <span class="token triple-quoted-string string">'''
@@ -439,7 +436,7 @@ tmp_data1<span class="token punctuation">.</span>reset_index<span class="token p
 twoday_data<span class="token punctuation">.</span>describe<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">#描述表的一些信息</span>
 </code></pre>
 <div align="center">
-<img src="../img/Anomaly_detection_process_img/componet_twoday_describe.jpg" width="60%/">
+<img src="../img/Anomaly_detection_process_img/componet_twoday_describe.jpg" width="40%/">
 </div>  
 
 <p>画出箱线图，可以看出存在的一些异常点：</p>
@@ -473,7 +470,7 @@ twoday_data<span class="token punctuation">[</span><span class="token string">'C
 data2
 </code></pre>
 <div align="center">
-<img src="../img/Anomaly_detection_process_img/L1_id_data.jpg" width="60%/">
+<img src="../img/Anomaly_detection_process_img/L1_id_data.jpg" width="40%/">
 </div>   
 
 <p>表中有个ID列，表示各个传感器的型号，做数据分析时，可以将ID列提取出来，作为列索引，方便观察。因此，先对表格进行透视：</p>
@@ -486,7 +483,7 @@ tmp_data2
 </code></pre>
 <p>透视结果如下所示：</p>
 <div align="center">
-<img src="../img/Anomaly_detection_process_img/L1_id_pivot.jpg" width="60%/">
+<img src="../img/Anomaly_detection_process_img/L1_id_pivot.jpg" width="100%/">
 </div>  
 
 <p>表格的列变成了二重索引，为了方便后续引用，将其变为一重索引。需要注意的是，这种变换需要数据类型都为string型，如果不是，需要提前转换。当然，还有一种手动方法，变为二重索引后导出表，这时是没有列索引的，自己再加上索引就好。</p>
@@ -498,7 +495,7 @@ one_class_data2
 </code></pre>
 <p>结果如下：</p>
 <div align="center">
-<img src="../img/Anomaly_detection_process_img/L1_id_oneclass.jpg" width="60%/">
+<img src="../img/Anomaly_detection_process_img/L1_id_oneclass.jpg" width="100%/">
 </div>  
 可以看到，列已经变为一重，列名为二重列名拼接而成。后续步骤与第一张表一样，这里不再做解释。以上为数据预处理，也可以说是数据清洗过程。  
 
