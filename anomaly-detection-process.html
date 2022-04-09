@@ -193,7 +193,7 @@
         <span class="pc">2022-03-25 20:23:25</span>
         <span class="mobile">2022-03-25 20:23</span>
         <!-- 插入更新时间 -->
-        <span class="pc">更新于：2022-04-03 21:54:00</span>
+        <span class="pc">更新于：2022-04-09 00:00:00</span>
     </span>
     
         <span class="article-categories article-meta-item">
@@ -231,7 +231,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>2.8k 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>4.3k 字</span>
         </span>
     
     
@@ -256,20 +256,26 @@
 
 <p>总体步骤有五步：  </p>
 <ol>
-<li>数据预处理：对数据做初步处理，方便后续的数据分析。包括时间戳的转换（因为是时序数据，需要对时间列做专门处理）、数据重采样（修改时间频率）、缺失值处理、异常值处理、数据平滑处理</li>
+<li>数据清洗：对数据做初步处理，方便后续的数据分析。包括时间戳的转换（因为是时序数据，需要对时间列做专门处理）、数据重采样（修改时间频率）、缺失值处理、异常值处理、数据平滑处理</li>
 <li>探索性数据分析EDA：通过作图、制表、方程拟合、计算特征量等手段探索数据的结构和规律的一种数据分析方法。主要是利用各种方式自由探索数据分布、数据相关性等。</li>
 <li>特征提取/相关性分析：对于单维序列，因为缺乏可用特征，需要进行特征提取，以便后续训练模型，时序序列中比较重要的特征是周比环比。对于多维序列，需要先进行相关性分析，剔除相关性强的数据。</li>
 <li>训练模型：对数据分析后选择合适的算法进行建模，用提取出的特征或若相关数据进行模型训练。</li>
 <li>异常检测：利用训练好的模型检测实际数据。单维常用算法有LSTM + Vae，通过预测的方式检测异常；多维可利用孤立森林、SVM、kmeans等。</li>
 </ol>
 <h1 id="2-项目实战"><a href="#2-项目实战" class="headerlink" title="2.项目实战"></a>2.项目实战</h1><p>利用工具：jupyter notebook; 语言：python</p>
-<h2 id="2-1-数据预处理"><a href="#2-1-数据预处理" class="headerlink" title="2.1 数据预处理"></a>2.1 数据预处理</h2><p>实现目标：提取csv文件数据，处理缺失值、异常值、数据平滑化，完成数据清洗。<br>首先加载必要库:</p>
+<h2 id="2-1-数据清洗"><a href="#2-1-数据清洗" class="headerlink" title="2.1 数据清洗"></a>2.1 数据清洗</h2><p>实现目标：提取csv文件数据，处理缺失值、异常值、数据平滑化，完成数据清洗。<br>首先加载必要库:</p>
 <pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np 
 <span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd 
 <span class="token keyword">import</span> random <span class="token keyword">as</span> rd 
 <span class="token keyword">import</span> datetime 
 <span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt 
 <span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>dates <span class="token keyword">as</span> mdate
+<span class="token keyword">from</span> statsmodels<span class="token punctuation">.</span>tsa<span class="token punctuation">.</span>seasonal <span class="token keyword">import</span> seasonal_decompose
+<span class="token keyword">from</span> statsmodels<span class="token punctuation">.</span>graphics<span class="token punctuation">.</span>tsaplots <span class="token keyword">import</span> plot_acf
+<span class="token keyword">from</span> statsmodels<span class="token punctuation">.</span>graphics<span class="token punctuation">.</span>tsaplots <span class="token keyword">import</span> plot_pacf
+<span class="token keyword">import</span> seaborn <span class="token keyword">as</span> sns
+<span class="token keyword">from</span> statsmodels<span class="token punctuation">.</span>tsa<span class="token punctuation">.</span>stattools <span class="token keyword">import</span> adfuller
+<span class="token keyword">from</span> scipy <span class="token keyword">import</span> signal
 <span class="token keyword">import</span> warnings
 warnings<span class="token punctuation">.</span>filterwarnings<span class="token punctuation">(</span><span class="token string">"ignore"</span><span class="token punctuation">)</span>
 </code></pre>
@@ -481,7 +487,7 @@ tmp_data2
 <img src="../img/Anomaly_detection_process_img/L1_id_pivot.jpg" width="100%/">
 </div>  
 
-<p>表格的列变成了二重索引，为了方便后续引用，将其变为一重索引。需要注意的是，这种变换需要数据类型都为string型，如果不是，需要提前转换。当然，还有一种手动方法，变为二重索引后导出表，这时是没有列索引的，自己再加上索引就好。</p>
+<p>表格的列变成了二重索引，为了方便后续引用，将其变为一重索引。需要注意的是，这种变换需要数据类型都为string型，如果不是，需要提前转换。当然，还有一种手动方法，变为二重索引后导出表，将原列索引删除，自己再加上索引就好。</p>
 <pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true">#改为一重列索引表，用one_class_data2表示</span>
 one_class_data2 <span class="token operator">=</span>tmp_data2<span class="token punctuation">.</span>copy<span class="token punctuation">(</span>deep<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">#拷贝表格</span>
 one_class_data2<span class="token punctuation">.</span>columns <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"_"</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token keyword">for</span> x <span class="token keyword">in</span> one_class_data2<span class="token punctuation">.</span>columns<span class="token punctuation">.</span>ravel<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>  <span class="token comment" spellcheck="true">#将原来的二重索引的列名进行拼接</span>
@@ -492,9 +498,175 @@ one_class_data2
 <div align="center">
 <img src="../img/Anomaly_detection_process_img/L1_id_oneclass.jpg" width="100%/">
 </div>  
-可以看到，列已经变为一重，列名为二重列名拼接而成。后续步骤与第一张表一样，这里不再做解释。以上为数据预处理，也可以说是数据清洗过程。  
 
-<h2 id="2-2-探索性数据分析EDA"><a href="#2-2-探索性数据分析EDA" class="headerlink" title="2.2 探索性数据分析EDA"></a>2.2 探索性数据分析EDA</h2>
+<p>可以看到，列已经变为一重，列名为二重列名拼接而成。后续步骤与第一张表一样，这里不再做解释。以上为数据清洗过程，下面对该数据进行分析。  </p>
+<h2 id="2-2-探索性数据分析EDA"><a href="#2-2-探索性数据分析EDA" class="headerlink" title="2.2 探索性数据分析EDA"></a>2.2 探索性数据分析EDA</h2><p>首先进行相关性分析。这里以表data2为例。分析的数据取较完整地一个月的时间片段，重采样为1min适当减小数据量。（记得导入表后先设置时间索引）</p>
+<pre class=" language-python"><code class="language-python">Month_data2 <span class="token operator">=</span> data2<span class="token punctuation">[</span><span class="token string">'2022-01-25 13:12:30'</span><span class="token punctuation">:</span><span class="token string">'2022-02-24 15:13:00'</span><span class="token punctuation">]</span>
+<span class="token comment" spellcheck="true"># 重采样一分钟(一个月数据)</span>
+Month_data2_1T <span class="token operator">=</span> Month_data2<span class="token punctuation">.</span>resample<span class="token punctuation">(</span><span class="token string">'T'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span>
+Month_data2_1T<span class="token operator">=</span>Month_data2_1T<span class="token punctuation">.</span>round<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#保留两位小数。</span>
+<span class="token comment" spellcheck="true"># 相关系数</span>
+Month_data2_1T<span class="token punctuation">.</span>corr<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>这里仅展示部分结果图：</p>
+<div align="center">
+<img src="../img/Anomaly_detection_process_img/Month_data2_1T_corr.jpg" width="50%/">
+</div>  
+
+<p>可以看到，每个变量间的相关程度都很高，不利用互相作为特征值。<br>对数据的自相关性和偏相关性进行分析。自相关：描述的是一组时间序列和它前面间隔n个时刻的一组时间序列之前的相关性。偏自相关：描述的是一组时间序列和它前面间隔n个时刻的一组时间序列之前的偏相关性。这里的偏相关性可以从本质上理解为去除了样本之间的干涉，也就是更早时刻的相关性影响。</p>
+<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 自相关，偏自相关，列出每一列的相关图</span>
+col <span class="token operator">=</span> Month_data2_1T<span class="token punctuation">.</span>columns
+<span class="token keyword">for</span> c <span class="token keyword">in</span> col<span class="token punctuation">:</span>  
+    fig <span class="token operator">=</span> plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    ax1 <span class="token operator">=</span> fig<span class="token punctuation">.</span>add_subplot<span class="token punctuation">(</span><span class="token number">121</span><span class="token punctuation">)</span>
+    ax1<span class="token punctuation">.</span>set_xlabel<span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+    ax2 <span class="token operator">=</span> fig<span class="token punctuation">.</span>add_subplot<span class="token punctuation">(</span><span class="token number">122</span><span class="token punctuation">)</span>
+    ax2<span class="token punctuation">.</span>set_xlabel<span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+    plot_acf<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">,</span>lags<span class="token operator">=</span><span class="token number">50</span><span class="token punctuation">,</span>ax <span class="token operator">=</span> ax1<span class="token punctuation">)</span>
+    plot_pacf<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">,</span>lags<span class="token operator">=</span><span class="token number">50</span><span class="token punctuation">,</span>ax <span class="token operator">=</span> ax2<span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>tight_layout<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>同样的，展示部分结果图。</p>
+<div align="center">
+<img src="../img/Anomaly_detection_process_img/Month_data2_1T_acf.jpg" width="60%/">
+</div>  
+
+<p>研究自相关、偏相关可用于判断是否适合使用时间预测方法。该图可应用于LSTM算法，作为参数选择的依据。具体使用方法有待明确。<br>查看温湿度的统计分布。这里仅仅是查看下数据分布，目前没有对于其分析的一些想法。</p>
+<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 管道温湿度统计分布图</span>
+<span class="token keyword">for</span> c <span class="token keyword">in</span> col<span class="token punctuation">:</span> 
+    plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    sns<span class="token punctuation">.</span>distplot<span class="token punctuation">(</span>Month_data_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">,</span> bins<span class="token operator">=</span>int<span class="token punctuation">(</span>np<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>len<span class="token punctuation">(</span>Month_data_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>展示部分结果图。</p>
+<div align="center">
+<img src="../img/Anomaly_detection_process_img/Month_data2_1T_distplot.jpg" width="60%/">
+</div>  
+
+
+<p>数据平稳性判断，使用单位根检验法。</p>
+<pre class=" language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">check_stationarity</span><span class="token punctuation">(</span>y<span class="token punctuation">,</span> lags_plots<span class="token operator">=</span><span class="token number">48</span><span class="token punctuation">,</span> figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">22</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token string">"Use Series as parameter"</span>
+    <span class="token comment" spellcheck="true"># Creating plots of the DF</span>
+    y <span class="token operator">=</span> pd<span class="token punctuation">.</span>Series<span class="token punctuation">(</span>y<span class="token punctuation">)</span>
+    fig <span class="token operator">=</span> plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    ax1 <span class="token operator">=</span> plt<span class="token punctuation">.</span>subplot2grid<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> colspan<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+    ax2 <span class="token operator">=</span> plt<span class="token punctuation">.</span>subplot2grid<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    ax3 <span class="token operator">=</span> plt<span class="token punctuation">.</span>subplot2grid<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    ax4 <span class="token operator">=</span> plt<span class="token punctuation">.</span>subplot2grid<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> colspan<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+
+    y<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>ax<span class="token operator">=</span>ax1<span class="token punctuation">,</span> figsize<span class="token operator">=</span>figsize<span class="token punctuation">)</span>
+    ax1<span class="token punctuation">.</span>set_title<span class="token punctuation">(</span><span class="token string">'Nums Variation'</span><span class="token punctuation">)</span>
+    plot_acf<span class="token punctuation">(</span>y<span class="token punctuation">,</span> lags<span class="token operator">=</span>lags_plots<span class="token punctuation">,</span> zero<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> ax<span class="token operator">=</span>ax2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    plot_pacf<span class="token punctuation">(</span>y<span class="token punctuation">,</span> lags<span class="token operator">=</span>lags_plots<span class="token punctuation">,</span> zero<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> ax<span class="token operator">=</span>ax3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    sns<span class="token punctuation">.</span>distplot<span class="token punctuation">(</span>y<span class="token punctuation">,</span> bins<span class="token operator">=</span>int<span class="token punctuation">(</span>np<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>len<span class="token punctuation">(</span>y<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ax<span class="token operator">=</span>ax4<span class="token punctuation">)</span>
+    ax4<span class="token punctuation">.</span>set_title<span class="token punctuation">(</span><span class="token string">'Distribution Chart'</span><span class="token punctuation">)</span>
+
+    plt<span class="token punctuation">.</span>tight_layout<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true"># plt.show()</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Results of Dickey-Fuller Test:'</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">#  regression：{c”，“ct”，“ctt”，“n”}要包含在回归中的常数和趋势顺序。</span>
+    <span class="token comment" spellcheck="true"># “c”：仅限常量（默认值）。</span>
+    <span class="token comment" spellcheck="true"># “ct”：恒定和趋势。</span>
+    <span class="token comment" spellcheck="true"># “ctt”：常数、线性和二次趋势。</span>
+    <span class="token comment" spellcheck="true"># n：没有常数，没有趋势。</span>
+
+    <span class="token comment" spellcheck="true"># ADF的结果主要看以下两个方面：</span>
+    <span class="token comment" spellcheck="true"># Test Statistic的值如果比Critical Value (5%)小则满足稳定性需求.</span>
+    <span class="token comment" spellcheck="true"># p-value越低（理论上需要低于0.05）证明序列越稳定。</span>
+    adfinput <span class="token operator">=</span> adfuller<span class="token punctuation">(</span>y<span class="token punctuation">,</span>regression <span class="token operator">=</span> <span class="token string">'c'</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">#单位根检验</span>
+    adftest <span class="token operator">=</span> pd<span class="token punctuation">.</span>Series<span class="token punctuation">(</span>adfinput<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span> index<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'Test Statistic'</span><span class="token punctuation">,</span><span class="token string">'p-value'</span><span class="token punctuation">,</span><span class="token string">'Lags Used'</span><span class="token punctuation">,</span><span class="token string">'Number of Observations Used'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    adftest <span class="token operator">=</span> round<span class="token punctuation">(</span>adftest<span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> key<span class="token punctuation">,</span> value <span class="token keyword">in</span> adfinput<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        adftest<span class="token punctuation">[</span><span class="token string">"Critical Value (%s)"</span><span class="token operator">%</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> value<span class="token punctuation">.</span>round<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+        
+    <span class="token keyword">print</span><span class="token punctuation">(</span>adftest<span class="token punctuation">)</span>
+    
+    <span class="token keyword">if</span> adftest<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>round<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> adftest<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">.</span>round<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'\nThe Test Statistics is lower than the Critical Value of 5%.\nThe serie seems to be stationary'</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"\nThe Test Statistics is higher than the Critical Value of 5%.\nThe serie isn't stationary"</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 检验平稳性</span>
+check_stationarity<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span><span class="token string">'Te_0'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<blockquote>
+<p>输出结果为：<br><br>Results of Dickey-Fuller Test:<br><br>Test Statistic                    -1.4583<br><br>p-value                            0.5540<br><br>Lags Used                         55.0000<br><br>Number of Observations Used    43266.0000<br><br>Critical Value (1%)               -3.4305<br><br>Critical Value (5%)               -2.8616<br><br>Critical Value (10%)              -2.5668<br><br>dtype: float64<br><br><br><br>The Test Statistics is higher than the Critical Value of 5%.<br><br>The serie isn’t stationary  </p>
+</blockquote>
+<p>判断平稳性两个标准：Test Statistic小于Critical Value (5%)　或是p-value小于0.05。平稳性是多数统计学模型的必要条件之一。可见原数据并不是平稳序列。<br>对于非平稳序列，可使用一阶差分使其平稳化。</p>
+<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true">#序列平稳化，一阶差分</span>
+Month_data_1T<span class="token punctuation">[</span><span class="token string">'Te_0_diff'</span><span class="token punctuation">]</span> <span class="token operator">=</span> Month_data_1T<span class="token punctuation">[</span><span class="token string">'Te_0'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>diff<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+</code></pre>
+<p>其稳定性结果为：</p>
+<blockquote>
+<p>Results of Dickey-Fuller Test:<br><br>Test Statistic                   -51.9122<br><br>p-value                            0.0000<br><br>Lags Used                         54.0000<br><br>Number of Observations Used    43267.0000<br><br>Critical Value (1%)               -3.4305<br><br>Critical Value (5%)               -2.8616<br><br>Critical Value (10%)              -2.5668<br><br>dtype: float64<br><br><br><br>The Test Statistics is lower than the Critical Value of 5%.<br><br>The serie seems to be stationary</p>
+</blockquote>
+<p>可见一阶差分可以有效是原序列平稳。后期可利用差分序列进行异常检测训练。<br>时间序列分解：所谓分解就是将时序数据分离成不同的成分，分解为：长期趋势Trend、季节性Seasonality和随机残差Residuals。分解序列后可针对每个子序列分别建模处理，如建模趋势后，在原数据中减去趋势的干扰。又或者当作特征值。</p>
+<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 管道温湿度时序序列分解：趋势+季节性+残差</span>
+col <span class="token operator">=</span> Month_data2_1T<span class="token punctuation">.</span>columns
+<span class="token keyword">for</span> c <span class="token keyword">in</span> col<span class="token punctuation">:</span>  
+    <span class="token comment" spellcheck="true">#用加性模型，周期1440为1440min，分解数据时间频率为1min，一天为1440min。这里将一天设为周期。</span>
+    decompose_result <span class="token operator">=</span> seasonal_decompose<span class="token punctuation">(</span>Month_data_1T2<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">,</span> model<span class="token operator">=</span><span class="token string">"additive"</span><span class="token punctuation">,</span> period<span class="token operator">=</span><span class="token number">1440</span><span class="token punctuation">)</span>
+    fig <span class="token operator">=</span> plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    ax1 <span class="token operator">=</span> fig<span class="token punctuation">.</span>add_subplot<span class="token punctuation">(</span><span class="token number">411</span><span class="token punctuation">)</span>
+    ax2 <span class="token operator">=</span> fig<span class="token punctuation">.</span>add_subplot<span class="token punctuation">(</span><span class="token number">412</span><span class="token punctuation">)</span>
+    ax3 <span class="token operator">=</span> fig<span class="token punctuation">.</span>add_subplot<span class="token punctuation">(</span><span class="token number">413</span><span class="token punctuation">)</span>
+    ax4 <span class="token operator">=</span> fig<span class="token punctuation">.</span>add_subplot<span class="token punctuation">(</span><span class="token number">414</span><span class="token punctuation">)</span>
+    ax1<span class="token punctuation">.</span>set_xlabel<span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+    ax1<span class="token punctuation">.</span>set_ylabel<span class="token punctuation">(</span><span class="token string">'init'</span><span class="token punctuation">)</span>
+    ax2<span class="token punctuation">.</span>set_xlabel<span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+    ax2<span class="token punctuation">.</span>set_ylabel<span class="token punctuation">(</span><span class="token string">'trend'</span><span class="token punctuation">)</span>
+    ax3<span class="token punctuation">.</span>set_xlabel<span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+    ax3<span class="token punctuation">.</span>set_ylabel<span class="token punctuation">(</span><span class="token string">'seasonal'</span><span class="token punctuation">)</span>
+    ax4<span class="token punctuation">.</span>set_xlabel<span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+    ax4<span class="token punctuation">.</span>set_ylabel<span class="token punctuation">(</span><span class="token string">'resid'</span><span class="token punctuation">)</span>
+    ax1<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    ax2<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>decompose_result<span class="token punctuation">.</span>trend<span class="token punctuation">)</span>
+    ax3<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>decompose_result<span class="token punctuation">.</span>seasonal<span class="token punctuation">)</span>
+    ax4<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>decompose_result<span class="token punctuation">.</span>resid<span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>tight_layout<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>部分结果如下：</p>
+<div align="center">
+<img src="../img/Anomaly_detection_process_img/Month_data2_1T_decompose.jpg" width="80%/">
+</div>  
+
+
+<p>接下来进行周期性检验,使用频谱图检测周期：</p>
+<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 查看频谱周期图与表</span>
+<span class="token keyword">def</span> <span class="token function">is_periodicity</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> fs <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> show_pic<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">:</span> 
+    <span class="token triple-quoted-string string">""" 
+    # Parameters  
+
+    data: 检测数据，ndarray类型 
+    show_pic: 是否展示图片 
+    fs: 自定义频率，如原表频率为1分钟，要想T为1天，输入fs=1440。
+    # return  
+
+    result.head(10): 返回频谱图中前十个最大频谱值所在的行 
+    """</span> 
+    f<span class="token punctuation">,</span> Pxx_den <span class="token operator">=</span> signal<span class="token punctuation">.</span>periodogram<span class="token punctuation">(</span>data<span class="token punctuation">,</span>fs<span class="token punctuation">)</span>  
+    T <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">/</span>f
+    result <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>columns<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'freq'</span><span class="token punctuation">,</span> <span class="token string">'spec'</span><span class="token punctuation">]</span><span class="token punctuation">)</span> 
+    result<span class="token punctuation">[</span><span class="token string">'freq'</span><span class="token punctuation">]</span> <span class="token operator">=</span> f 
+    result<span class="token punctuation">[</span><span class="token string">'spec'</span><span class="token punctuation">]</span> <span class="token operator">=</span> Pxx_den 
+    result<span class="token punctuation">[</span><span class="token string">'T'</span><span class="token punctuation">]</span> <span class="token operator">=</span> T
+    <span class="token comment" spellcheck="true"># 按照频率强弱程度降序排列 </span>
+    result <span class="token operator">=</span> result<span class="token punctuation">.</span>sort_values<span class="token punctuation">(</span>by<span class="token operator">=</span><span class="token string">'spec'</span><span class="token punctuation">,</span> ascending<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span> 
+    <span class="token comment" spellcheck="true"># 频率转换为周期 </span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> show_pic <span class="token keyword">is</span> <span class="token boolean">True</span><span class="token punctuation">:</span> 
+        plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>T<span class="token punctuation">,</span> Pxx_den<span class="token punctuation">)</span> 
+        plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span> 
+    <span class="token keyword">return</span> result<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+</code></pre>
+<p>对分解出的残差进行检测，输出结果如下。</p>
+<div align="center">
+<img src="../img/Anomaly_detection_process_img/Month_data2_1T_periodogram.jpg" width="40%/">
+<img src="../img/Anomaly_detection_process_img/Month_data2_1T_residperiod.jpg" width="30%/">
+</div>  
+
+
         </div>
 
         
@@ -504,7 +676,7 @@ one_class_data2
         <li>本文标题：时序数据异常检测流程与项目实战</li>
         <li>本文作者：EasyBoy</li>
         <li>创建时间：2022-03-25 20:23:25</li>
-        <!-- <li>更新于：2022-04-03 21:54:00</li> -->
+        <!-- <li>更新于：2022-04-09 00:00:00</li> -->
         <li>
             本文链接：https://easyboy-blog.com/anomaly-detection-process.html
         </li>
@@ -762,7 +934,7 @@ one_class_data2
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%80%BB%E4%BD%93%E6%B5%81%E7%A8%8B%E4%BB%8B%E7%BB%8D"><span class="nav-text">1.总体流程介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98"><span class="nav-text">2.项目实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-text">2.1 数据预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E6%8E%A2%E7%B4%A2%E6%80%A7%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90EDA"><span class="nav-text">2.2 探索性数据分析EDA</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%80%BB%E4%BD%93%E6%B5%81%E7%A8%8B%E4%BB%8B%E7%BB%8D"><span class="nav-text">1.总体流程介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98"><span class="nav-text">2.项目实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97"><span class="nav-text">2.1 数据清洗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E6%8E%A2%E7%B4%A2%E6%80%A7%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90EDA"><span class="nav-text">2.2 探索性数据分析EDA</span></a></li></ol></li></ol>
     </div>
 </div>
         </aside>
