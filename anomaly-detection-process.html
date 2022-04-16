@@ -1,270 +1,7 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="keywords" content="Hexo Theme Keep">
-    <meta name="description" content="fighting">
-    <meta name="author" content="EasyBoy">
-    
-    <title>
-        
-            时序数据异常检测流程与项目实战 |
-        
-        EasyBoy
-    </title>
-    
-<link rel="stylesheet" href="/css/style.css">
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="keywords" content="Hexo Theme Keep"><meta name="description" content="fighting"><meta name="author" content="EasyBoy"><title>时序数据异常检测流程与项目实战 | EasyBoy</title><link rel="stylesheet" href="/css/style.css"><link rel="shortcut icon" href="/images/cell-16x16-next.png"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/css/font-awesome.min.css"><script id="hexo-configurations">let KEEP=window.KEEP||{};KEEP.hexo_config={hostname:"easyboy-blog.com",root:"/",language:"zh-CN",path:"search.xml"},KEEP.theme_config={toc:{enable:!0,number:!1,expand_all:!0,init_open:!0},style:{primary_color:"#0066CC",avatar:"/images/avatar.jpeg",favicon:"/images/cell-16x16-next.png",article_img_align:"left",left_side_width:"260px",content_max_width:"920px",hover:{shadow:!1,scale:!1},first_screen:{enable:!0,background_img:"/images/wallhaven-72kjz9_1920x1080.png",description:"Welcome to Easyboy's Blog"},scroll:{progress_bar:{enable:!1},percent:{enable:!1}}},local_search:{enable:!0,preload:!0},code_copy:{enable:!0,style:"default"},pjax:{enable:!0},lazyload:{enable:!0},version:"3.4.5"},KEEP.language_ago={second:"%s 秒前",minute:"%s 分钟前",hour:"%s 小时前",day:"%s 天前",week:"%s 周前",month:"%s 个月前",year:"%s 年前"}</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="home-laser" type="application/atom+xml">
 
-    <link rel="shortcut icon" href="/images/cell-16x16-next.png">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/css/font-awesome.min.css">
-    <script id="hexo-configurations">
-    let KEEP = window.KEEP || {};
-    KEEP.hexo_config = {"hostname":"easyboy-blog.com","root":"/","language":"zh-CN","path":"search.xml"};
-    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.jpeg","favicon":"/images/cell-16x16-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/wallhaven-72kjz9_1920x1080.png","description":"Welcome to Easyboy's Blog"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"3.4.5"};
-    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
-  </script>
-<meta name="generator" content="Hexo 6.0.0">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-<link rel="alternate" href="/atom.xml" title="home-laser" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
-
-
-<body>
-<div class="progress-bar-container">
-    
-
-    
-        <span class="pjax-progress-bar"></span>
-        <span class="pjax-progress-icon">
-            <i class="fas fa-circle-notch fa-spin"></i>
-        </span>
-    
-</div>
-
-
-<main class="page-container">
-
-    
-
-    <div class="page-main-content">
-
-        <div class="page-main-content-top">
-            <header class="header-wrapper">
-
-    <div class="header-content">
-        <div class="left">
-            
-                <a class="logo-image" href="/">
-                    <img src="/images/cell-32x32-next.png">
-                </a>
-            
-            <a class="logo-title" href="/">
-                EasyBoy
-            </a>
-        </div>
-
-        <div class="right">
-            <div class="pc">
-                <ul class="menu-list">
-                    
-                        <li class="menu-item">
-                            <a class=""
-                               href="/"
-                            >
-                                首页
-                            </a>
-                        </li>
-                    
-                        <li class="menu-item">
-                            <a class=""
-                               href="/archives"
-                            >
-                                归档
-                            </a>
-                        </li>
-                    
-                        <li class="menu-item">
-                            <a class=""
-                               href="/categories"
-                            >
-                                分类
-                            </a>
-                        </li>
-                    
-                        <li class="menu-item">
-                            <a class=""
-                               href="/tags"
-                            >
-                                标签
-                            </a>
-                        </li>
-                    
-                        <li class="menu-item">
-                            <a class=""
-                               href="/about"
-                            >
-                                关于
-                            </a>
-                        </li>
-                    
-                    
-                        <li class="menu-item search search-popup-trigger">
-                            <i class="fas fa-search"></i>
-                        </li>
-                    
-                </ul>
-            </div>
-            <div class="mobile">
-                
-                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
-                
-                <div class="icon-item menu-bar">
-                    <div class="menu-bar-middle"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="header-drawer">
-        <ul class="drawer-menu-list">
-            
-                <li class="drawer-menu-item flex-center">
-                    <a class=""
-                       href="/">首页</a>
-                </li>
-            
-                <li class="drawer-menu-item flex-center">
-                    <a class=""
-                       href="/archives">归档</a>
-                </li>
-            
-                <li class="drawer-menu-item flex-center">
-                    <a class=""
-                       href="/categories">分类</a>
-                </li>
-            
-                <li class="drawer-menu-item flex-center">
-                    <a class=""
-                       href="/tags">标签</a>
-                </li>
-            
-                <li class="drawer-menu-item flex-center">
-                    <a class=""
-                       href="/about">关于</a>
-                </li>
-            
-        </ul>
-    </div>
-
-    <div class="window-mask"></div>
-
-</header>
-
-
-        </div>
-
-        <div class="page-main-content-middle">
-
-            <div class="main-content">
-
-                
-                    <div class="fade-in-down-animation">
-    <div class="article-content-container">
-
-        <div class="article-title">
-            <span class="title-hover-animation">时序数据异常检测流程与项目实战</span>
-        </div>
-
-        
-            <div class="article-header">
-                <div class="avatar">
-                    <img src="/images/avatar.jpeg">
-                </div>
-                <div class="info">
-                    <div class="author">
-                        <span class="name">EasyBoy</span>
-                        
-                    </div>
-                    <div class="meta-info">
-                        <div class="article-meta-info">
-    <span class="article-date article-meta-item">
-        <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2022-03-25 20:23:25</span>
-        <span class="mobile">2022-03-25 20:23</span>
-        <!-- 插入更新时间 -->
-        <span class="pc">更新于：2022-04-09 00:00:00</span>
-    </span>
-    
-        <span class="article-categories article-meta-item">
-            <i class="fas fa-folder"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-    
-        <span class="article-tags article-meta-item">
-            <i class="fas fa-tags"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE/">时序数据</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">异常处理</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-
-    
-    
-        <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>4.3k 字</span>
-        </span>
-    
-    
-    
-        <span class="article-pv article-meta-item">
-            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
-    
-</div>
-
-                    </div>
-                </div>
-            </div>
-        
-
-        <div class="article-content markdown-body">
-            <p>本文主要内容为对时序数据异常检测流程进行简单介绍，然后通过项目实战进行详细解释。全文内容根据个人实际经验所得。</p>
-<h1 id="1-总体流程介绍"><a href="#1-总体流程介绍" class="headerlink" title="1.总体流程介绍"></a>1.总体流程介绍</h1><p>针对项目中传感器数据异常检测，经调研后，个人初步总结工程上实现异常检测的流程。流程框图如下图所示：<br> <span id="more"></span>  </p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/Anomaly_detection_process.jpg" width="60%/">
-</div>  
-
-<p>总体步骤有五步：  </p>
-<ol>
-<li>数据清洗：对数据做初步处理，方便后续的数据分析。包括时间戳的转换（因为是时序数据，需要对时间列做专门处理）、数据重采样（修改时间频率）、缺失值处理、异常值处理、数据平滑处理</li>
-<li>探索性数据分析EDA：通过作图、制表、方程拟合、计算特征量等手段探索数据的结构和规律的一种数据分析方法。主要是利用各种方式自由探索数据分布、数据相关性等。</li>
-<li>特征提取/相关性分析：对于单维序列，因为缺乏可用特征，需要进行特征提取，以便后续训练模型，时序序列中比较重要的特征是周比环比。对于多维序列，需要先进行相关性分析，剔除相关性强的数据。</li>
-<li>训练模型：对数据分析后选择合适的算法进行建模，用提取出的特征或若相关数据进行模型训练。</li>
-<li>异常检测：利用训练好的模型检测实际数据。单维常用算法有LSTM + Vae，通过预测的方式检测异常；多维可利用孤立森林、SVM、kmeans等。</li>
-</ol>
-<h1 id="2-项目实战"><a href="#2-项目实战" class="headerlink" title="2.项目实战"></a>2.项目实战</h1><p>利用工具：jupyter notebook; 语言：python</p>
-<h2 id="2-1-数据清洗"><a href="#2-1-数据清洗" class="headerlink" title="2.1 数据清洗"></a>2.1 数据清洗</h2><p>实现目标：提取csv文件数据，处理缺失值、异常值、数据平滑化，完成数据清洗。<br>首先加载必要库:</p>
-<pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np 
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head><body><div class="progress-bar-container"><span class="pjax-progress-bar"></span> <span class="pjax-progress-icon"><i class="fas fa-circle-notch fa-spin"></i></span></div><main class="page-container"><div class="page-main-content"><div class="page-main-content-top"><header class="header-wrapper"><div class="header-content"><div class="left"><a class="logo-image" href="/"><img src="/images/cell-32x32-next.png"> </a><a class="logo-title" href="/">EasyBoy</a></div><div class="right"><div class="pc"><ul class="menu-list"><li class="menu-item"><a href="/">首页</a></li><li class="menu-item"><a href="/archives">归档</a></li><li class="menu-item"><a href="/categories">分类</a></li><li class="menu-item"><a href="/tags">标签</a></li><li class="menu-item"><a href="/about">关于</a></li><li class="menu-item search search-popup-trigger"><i class="fas fa-search"></i></li></ul></div><div class="mobile"><div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div><div class="icon-item menu-bar"><div class="menu-bar-middle"></div></div></div></div></div><div class="header-drawer"><ul class="drawer-menu-list"><li class="drawer-menu-item flex-center"><a href="/">首页</a></li><li class="drawer-menu-item flex-center"><a href="/archives">归档</a></li><li class="drawer-menu-item flex-center"><a href="/categories">分类</a></li><li class="drawer-menu-item flex-center"><a href="/tags">标签</a></li><li class="drawer-menu-item flex-center"><a href="/about">关于</a></li></ul></div><div class="window-mask"></div></header></div><div class="page-main-content-middle"><div class="main-content"><div class="fade-in-down-animation"><div class="article-content-container"><div class="article-title"><span class="title-hover-animation">时序数据异常检测流程与项目实战</span></div><div class="article-header"><div class="avatar"><img src="/images/avatar.jpeg"></div><div class="info"><div class="author"><span class="name">EasyBoy</span></div><div class="meta-info"><div class="article-meta-info"><span class="article-date article-meta-item"><i class="fas fa-edit"></i>&nbsp; <span class="pc">2022-03-25 20:23:25</span> <span class="mobile">2022-03-25 20:23</span><span class="pc">更新于：2022-04-15</span> </span><span class="article-categories article-meta-item"><i class="fas fa-folder"></i>&nbsp;<ul><li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>&nbsp;</li></ul></span><span class="article-tags article-meta-item"><i class="fas fa-tags"></i>&nbsp;<ul><li><a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>&nbsp;</li><li>| <a href="/tags/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE/">时序数据</a>&nbsp;</li><li>| <a href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">异常处理</a>&nbsp;</li></ul></span><span class="article-wordcount article-meta-item"><i class="fas fa-file-word"></i>&nbsp;<span>5.2k 字</span> </span><span class="article-pv article-meta-item"><i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span></span></div></div></div></div><div class="article-content markdown-body"><p>本文主要内容为对时序数据异常检测流程进行简单介绍，然后通过项目实战进行详细解释。全文内容根据个人实际经验所得。</p><h1 id="1-总体流程介绍"><a href="#1-总体流程介绍" class="headerlink" title="1.总体流程介绍"></a>1.总体流程介绍</h1><p>针对项目中传感器数据异常检测，经调研后，个人初步总结工程上实现异常检测的流程。流程框图如下图所示：<br><span id="more"></span></p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/Anomaly_detection_process.6l6blsl243s0.jpg" width="60%/"></div><p>总体步骤有五步：</p><ol><li>数据清洗：对数据做初步处理，方便后续的数据分析。包括时间戳的转换（因为是时序数据，需要对时间列做专门处理）、数据重采样（修改时间频率）、缺失值处理、异常值处理、数据平滑处理</li><li>探索性数据分析EDA：通过作图、制表、方程拟合、计算特征量等手段探索数据的结构和规律的一种数据分析方法。主要是利用各种方式自由探索数据分布、数据相关性等。</li><li>特征提取/相关性分析：对于单维序列，因为缺乏可用特征，需要进行特征提取，以便后续训练模型，时序序列中比较重要的特征是周比环比。对于多维序列，需要先进行相关性分析，剔除相关性强的数据。</li><li>训练模型：对数据分析后选择合适的算法进行建模，用提取出的特征或若相关数据进行模型训练。</li><li>异常检测：利用训练好的模型检测实际数据。单维常用算法有LSTM + Vae，通过预测的方式检测异常；多维可利用孤立森林、SVM、kmeans等。</li></ol><h1 id="2-项目实战"><a href="#2-项目实战" class="headerlink" title="2.项目实战"></a>2.项目实战</h1><p>利用工具：jupyter notebook; 语言：python</p><h2 id="2-1-数据清洗"><a href="#2-1-数据清洗" class="headerlink" title="2.1 数据清洗"></a>2.1 数据清洗</h2><p>实现目标：提取csv文件数据，处理缺失值、异常值、数据平滑化，完成数据清洗。<br>首先加载必要库:</p><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np 
 <span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd 
 <span class="token keyword">import</span> random <span class="token keyword">as</span> rd 
 <span class="token keyword">import</span> datetime 
@@ -278,33 +15,15 @@
 <span class="token keyword">from</span> scipy <span class="token keyword">import</span> signal
 <span class="token keyword">import</span> warnings
 warnings<span class="token punctuation">.</span>filterwarnings<span class="token punctuation">(</span><span class="token string">"ignore"</span><span class="token punctuation">)</span>
-</code></pre>
-<p>提取csv文件,利用pd.read_csv()函数可完整提取表中全部内容，函数有很多参数可以选择，实现众多功能</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true">#读取表格数据</span>
+</code></pre><p>提取csv文件,利用pd.read_csv()函数可完整提取表中全部内容，函数有很多参数可以选择，实现众多功能</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true">#读取表格数据</span>
 data1 <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'./data/componet.csv'</span><span class="token punctuation">)</span>
 data2 <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'./data/tehu.csv'</span><span class="token punctuation">)</span>
 data1 <span class="token comment" spellcheck="true">#展示data1中数据</span>
-</code></pre>
-<p>表格数据如图所示：</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/componet.jpg" width="60%/">
-</div>  
-
-<p>查询表中是否有缺失值，使用.isnull()查询，返回含有缺失值的行。我的数据没有缺失值，表为空，就不展示了。</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 查看缺失值</span>
+</code></pre><p>表格数据如图所示：</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/componet.4mjopka34v80.jpg" width="60%/"></div><p>查询表中是否有缺失值，使用.isnull()查询，返回含有缺失值的行。我的数据没有缺失值，表为空，就不展示了。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 查看缺失值</span>
 pivot_data<span class="token punctuation">[</span>pivot_data<span class="token punctuation">.</span>isnull<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>T<span class="token punctuation">.</span>any<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
-</code></pre>
-<p>将data1中时间列数据设置为索引，方便查询，也方便可视化</p>
-<pre class=" language-python"><code class="language-python">data1<span class="token punctuation">.</span>index <span class="token operator">=</span> pd<span class="token punctuation">.</span>to_datetime<span class="token punctuation">(</span>data1<span class="token punctuation">.</span>Datetime<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#设置时间列为索引</span>
+</code></pre><p>将data1中时间列数据设置为索引，方便查询，也方便可视化</p><pre class="language-python"><code class="language-python">data1<span class="token punctuation">.</span>index <span class="token operator">=</span> pd<span class="token punctuation">.</span>to_datetime<span class="token punctuation">(</span>data1<span class="token punctuation">.</span>Datetime<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#设置时间列为索引</span>
 data1
-</code></pre>
-<p>设置完后数据：</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/componet_index.jpg" width="60%/">
-</div>  
-
-<p>先对未处理的数据进行可视化，看看数据形态：</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true">#可视化</span>
+</code></pre><p>设置完后数据：</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/componet_index.78rh4tnfar00.jpg" width="60%/"></div><p>先对未处理的数据进行可视化，看看数据形态：</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true">#可视化</span>
 <span class="token keyword">for</span> c_disc <span class="token keyword">in</span> <span class="token punctuation">[</span><span class="token string">'Comp0_Te'</span><span class="token punctuation">,</span><span class="token string">'Comp1_Te'</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
     t_disc <span class="token operator">=</span> tmp_data1<span class="token punctuation">[</span>c_disc<span class="token punctuation">]</span>
     plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">120</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -314,24 +33,10 @@ data1
     <span class="token comment" spellcheck="true">#设置x轴显示范围，freq代表间隔频率，tmp_data1.index[0]代表起始时间,tmp_data1.index[-1]代表结束时间</span>
     plt<span class="token punctuation">.</span>xticks<span class="token punctuation">(</span>pd<span class="token punctuation">.</span>date_range<span class="token punctuation">(</span>tmp_data1<span class="token punctuation">.</span>index<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>tmp_data1<span class="token punctuation">.</span>index<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>freq<span class="token operator">=</span><span class="token string">'D'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>rotation<span class="token operator">=</span><span class="token number">45</span><span class="token punctuation">)</span> 
     plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>t_disc<span class="token punctuation">)</span>
-</code></pre>
-<p>其中一个曲线示意图：</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/componet_plot.jpg" width="100%/">
-</div> 
-
-<p>可以看出，数据有明显的异常点，要么很大，要么很小。为了后面的数据分析与模型训练，我们所以需要对这些明显的异常点进行简单处理。处理方式为使用箱型图，筛选出异常点，然后用前值进行替换。 在此之前，我们先对时间索引进行处理。在这里，我的数据采样间隔大致为2s，但并不固定。因此，在尽可能不影响原数据的情况下，将重采样间隔设置为2S，只做规范时间频率使用。使用resample()函数处理。</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true">#重采样 </span>
+</code></pre><p>其中一个曲线示意图：</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/componet_plot.4833uxky2zg0.jpg" width="100%/"></div><p>可以看出，数据有明显的异常点，要么很大，要么很小。为了后面的数据分析与模型训练，我们所以需要对这些明显的异常点进行简单处理。处理方式为使用箱型图，筛选出异常点，然后用前值进行替换。 在此之前，我们先对时间索引进行处理。在这里，我的数据采样间隔大致为2s，但并不固定。因此，在尽可能不影响原数据的情况下，将重采样间隔设置为2S，只做规范时间频率使用。使用resample()函数处理。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true">#重采样 </span>
 tmp_data1 <span class="token operator">=</span> data1<span class="token punctuation">.</span>resample<span class="token punctuation">(</span><span class="token string">'2S'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#时间间隔取2S，mean()取平均值,用tmp_data1接收转换后的表，不改变原表内容</span>
 tmp_data1
-</code></pre>
-<p>重采样后的数据：</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/componet_resample.jpg" width="100%/">
-</div>  
-
-<p>可以看出，数据时间间隔已变为2S等距，且值也有所变化，因为非等距时间间隔，不可避免地出现了缺失值。因此下一步对缺失值进行填补。填补策略为：对短时间缺失数据填补，长时间缺失数据删除。填补使用缺失点前7个历史数据的均值填补，以是否连续缺失十个点判断是否是长时间缺失数据。这里自己写了个填补函数用于实现上面的功能。（对于几百万的数据量，填补时间很长，有一两小时）</p>
-<pre class=" language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">nmeans_fill_missing</span><span class="token punctuation">(</span>fill_col<span class="token punctuation">,</span> df <span class="token punctuation">,</span> window<span class="token operator">=</span><span class="token number">7</span><span class="token punctuation">,</span> time_range <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+</code></pre><p>重采样后的数据：</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/componet_resample.tfaifs2cgrk.jpg" width="100%/"></div><p>可以看出，数据时间间隔已变为2S等距，且值也有所变化，因为非等距时间间隔，不可避免地出现了缺失值。因此下一步对缺失值进行<strong>填补</strong>。填补策略为：对短时间缺失数据填补，长时间缺失数据删除。填补使用缺失点前7个历史数据的均值填补，以是否连续缺失十个点判断是否是长时间缺失数据。这里自己写了个填补函数用于实现上面的功能。（对于几百万的数据量，填补时间很长，有一两小时）</p><pre class="language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">nmeans_fill_missing</span><span class="token punctuation">(</span>fill_col<span class="token punctuation">,</span> df <span class="token punctuation">,</span> window<span class="token operator">=</span><span class="token number">7</span><span class="token punctuation">,</span> time_range <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
         <span class="token triple-quoted-string string">'''
         实现功能： 对表格中的某一列的缺失值进行填补，使用邻近历史数据的均值填补，对于大范围缺失点，不进行填补，可对均值窗口、缺失时间范围进行设置
         fill_col: 选择插值的列，可填名字，也可填index
@@ -395,9 +100,7 @@ tmp_data1
 <span class="token keyword">for</span> c_disc <span class="token keyword">in</span> <span class="token punctuation">[</span><span class="token string">'Comp0_Te'</span><span class="token punctuation">,</span><span class="token string">'Comp1_Te'</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
     tmp_data1 <span class="token operator">=</span> nmeans_fill_missing<span class="token punctuation">(</span>c_disc<span class="token punctuation">,</span> tmp_data1<span class="token punctuation">,</span> window<span class="token operator">=</span><span class="token number">7</span><span class="token punctuation">)</span>
 tmp_data1
-</code></pre>
-<p>为了检验填补效果，又写了个子函数，用来获取每次检测到的长间隔时间端的开始时间和结束时间对于的行数。根据返回的结果，查询对应的时间信息，判断是否满足填补策略</p>
-<pre class=" language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">find_long_missing</span><span class="token punctuation">(</span>fill_col<span class="token punctuation">,</span> df <span class="token punctuation">,</span> time_range <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+</code></pre><p>为了检验填补效果，又写了个子函数，用来获取每次检测到的长间隔时间端的开始时间和结束时间对于的行数。根据返回的结果，查询对应的时间信息，判断是否满足填补策略</p><pre class="language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">find_long_missing</span><span class="token punctuation">(</span>fill_col<span class="token punctuation">,</span> df <span class="token punctuation">,</span> time_range <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
         <span class="token triple-quoted-string string">'''
         实现功能： 获取长间隔断点的点信息，返回dot_list数组，每两个为一对时间段
         fill_col: 选择插值的列，可填名字，也可填index
@@ -423,37 +126,21 @@ tmp_data1
                     dot_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>i<span class="token punctuation">)</span>   
             i <span class="token operator">+=</span><span class="token number">1</span>
         <span class="token keyword">return</span> dot_list
-</code></pre>
-<p>然后删除缺失值并导出。使用reset_index()是为了让时间索引一起导出来。这里用的导出方法缺点是索引需要自己手动加上去。</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true">#删除缺失值</span>
+</code></pre><p>然后删除缺失值并导出。使用reset_index()是为了让时间索引一起导出来。这里用的导出方法缺点是索引需要自己手动加上去。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true">#删除缺失值</span>
 tmp_data1 <span class="token operator">=</span> tmp_data1<span class="token punctuation">.</span>dropna<span class="token punctuation">(</span>axis <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> how <span class="token operator">=</span> <span class="token string">'all'</span><span class="token punctuation">,</span>inplace <span class="token operator">=</span> <span class="token boolean">False</span><span class="token punctuation">)</span>
 <span class="token comment" spellcheck="true">#避免之后重新填补，导出经插值，删除空值后的表</span>
 path <span class="token operator">=</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>abspath<span class="token punctuation">(</span>r<span class="token string">'./data/l1_tehu'</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 文件夹路径</span>
 new_file_name <span class="token operator">=</span> <span class="token string">'tmp_data1_insert.csv'</span>
 tmp_data1<span class="token punctuation">.</span>reset_index<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>to_csv<span class="token punctuation">(</span>path <span class="token operator">+</span> <span class="token string">'/'</span> <span class="token operator">+</span> new_file_name<span class="token punctuation">,</span> mode<span class="token operator">=</span><span class="token string">'a'</span><span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">'gbk'</span><span class="token punctuation">,</span> header<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> index<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
-</code></pre>
-<p>下面对前面的异常值进行处理。这里只选取其中一个片段进行示范。</p>
-<pre class=" language-python"><code class="language-python">twoday_data <span class="token operator">=</span> tmp_data1<span class="token punctuation">[</span><span class="token string">'2021-11-01 18:58:30'</span><span class="token punctuation">:</span> <span class="token string">'2021-11-03 11:35:00'</span><span class="token punctuation">]</span>
+</code></pre><p>下面对前面的<strong>异常值</strong>进行处理。这里只选取其中一个片段进行示范。</p><pre class="language-python"><code class="language-python">twoday_data <span class="token operator">=</span> tmp_data1<span class="token punctuation">[</span><span class="token string">'2021-11-01 18:58:30'</span><span class="token punctuation">:</span> <span class="token string">'2021-11-03 11:35:00'</span><span class="token punctuation">]</span>
 twoday_data<span class="token punctuation">.</span>describe<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">#描述表的一些信息</span>
-</code></pre>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/componet_twoday_describe.jpg" width="40%/">
-</div>  
-
-<p>画出箱线图，可以看出存在的一些异常点：</p>
-<pre class=" language-python"><code class="language-python">plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
+</code></pre><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/componet_twoday_describe.3qyix6pukji0.jpg" width="40%/"></div><p>画出箱线图，可以看出存在的一些异常点：</p><pre class="language-python"><code class="language-python">plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
 plt<span class="token punctuation">.</span>boxplot<span class="token punctuation">(</span>twoday_data<span class="token punctuation">[</span><span class="token string">'Comp0_Te'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
 plt<span class="token punctuation">.</span>boxplot<span class="token punctuation">(</span>twoday_data<span class="token punctuation">[</span><span class="token string">'Comp1_Te'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
-</code></pre>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/componet_twoday_boxplot.jpg" width="60%/">
-</div>  
-
-<p>然后利用四分位，删除异常值并用前值进行填补。</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 超过了上四分位2倍四分位距或下四分位2倍距离都算异常值，用上一个值填充</span>
+</code></pre><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/componet_twoday_boxplot.705wl11k1jo0.jpg" width="60%/"></div><p>然后利用四分位，删除异常值并用前值进行填补。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 超过了上四分位2倍四分位距或下四分位2倍距离都算异常值，用上一个值填充</span>
 a <span class="token operator">=</span> twoday_data<span class="token punctuation">[</span><span class="token string">'Comp0_Te'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>quantile<span class="token punctuation">(</span><span class="token number">0.75</span><span class="token punctuation">)</span>
 b <span class="token operator">=</span> twoday_data<span class="token punctuation">[</span><span class="token string">'Comp0_Te'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>quantile<span class="token punctuation">(</span><span class="token number">0.25</span><span class="token punctuation">)</span>
 c <span class="token operator">=</span> twoday_data<span class="token punctuation">[</span><span class="token string">'Comp0_Te'</span><span class="token punctuation">]</span>
@@ -461,60 +148,32 @@ c<span class="token punctuation">[</span><span class="token punctuation">(</span
 c<span class="token punctuation">.</span>fillna<span class="token punctuation">(</span>method<span class="token operator">=</span><span class="token string">'pad'</span><span class="token punctuation">,</span>inplace<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
 twoday_data<span class="token punctuation">[</span><span class="token string">'Comp0_Te'</span><span class="token punctuation">]</span> <span class="token operator">=</span> c
 <span class="token keyword">print</span><span class="token punctuation">(</span>twoday_data<span class="token punctuation">[</span><span class="token string">'Comp0_Te'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>describe<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-</code></pre>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/componet_twoday_boxplot_new.jpg" width="60%/">
-</div>  
-
-<p>异常值处理完后，还有数据平滑处理。平滑方法网上直接搜就有，但我用后效果并不好。找到个效果比较好的库tsmoothie，但这个数据量稍微大些，我电脑就跑不动了，很吃内存，所以也没用，后期再考虑如何处理平滑问题。<br>下面处理第二张表的数据。同样的操作，先将时间列设为索引，展示data2中数据：</p>
-<pre class=" language-python"><code class="language-python">data2<span class="token punctuation">.</span>index <span class="token operator">=</span> pd<span class="token punctuation">.</span>to_datetime<span class="token punctuation">(</span>data2<span class="token punctuation">.</span>Datetime<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#设置时间列为索引</span>
+</code></pre><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/componet_twoday_boxplot_new.44m969zxzbg0.jpg" width="60%/"></div><p>异常值处理完后，还有数据平滑处理。平滑处理在第二张表中演示。下面处理第二张表的数据。同样的操作，先将时间列设为索引，展示data2中数据：</p><pre class="language-python"><code class="language-python">data2<span class="token punctuation">.</span>index <span class="token operator">=</span> pd<span class="token punctuation">.</span>to_datetime<span class="token punctuation">(</span>data2<span class="token punctuation">.</span>Datetime<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#设置时间列为索引</span>
 data2
-</code></pre>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/L1_id_data.jpg" width="40%/">
-</div>   
-
-<p>表中有个ID列，表示各个传感器的型号，做数据分析时，可以将ID列提取出来，作为列索引，方便观察。因此，先对表格进行透视：</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true">#数据透视</span>
+</code></pre><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/L1_id_data.6dh59h41kq40.jpg" width="40%/"></div><p>表中有个ID列，表示各个传感器的型号，做数据分析时，可以将ID列提取出来，作为列索引，方便观察。因此，先对表格进行<strong>透视</strong>：</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true">#数据透视</span>
 <span class="token comment" spellcheck="true">#tmp_data2用来拷贝data2数据变为二重索引表，原表数据保留 </span>
 tmp_data2<span class="token operator">=</span>data2   
 tmp_data2<span class="token punctuation">[</span><span class="token string">'L1_id'</span><span class="token punctuation">]</span> <span class="token operator">=</span> tmp_data2<span class="token punctuation">[</span><span class="token string">'L1_id'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>astype<span class="token punctuation">(</span>str<span class="token punctuation">)</span>
 tmp_data2<span class="token operator">=</span>data2<span class="token punctuation">.</span>pivot_table<span class="token punctuation">(</span>index<span class="token operator">=</span><span class="token string">'Datetime'</span><span class="token punctuation">,</span>columns<span class="token operator">=</span><span class="token string">'L1_id'</span><span class="token punctuation">)</span>
 tmp_data2
-</code></pre>
-<p>透视结果如下所示：</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/L1_id_pivot.jpg" width="100%/">
-</div>  
-
-<p>表格的列变成了二重索引，为了方便后续引用，将其变为一重索引。需要注意的是，这种变换需要数据类型都为string型，如果不是，需要提前转换。当然，还有一种手动方法，变为二重索引后导出表，将原列索引删除，自己再加上索引就好。</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true">#改为一重列索引表，用one_class_data2表示</span>
+</code></pre><p>透视结果如下所示：</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/L1_id_pivot.2ab6wthn3ack.jpg" width="100%/"></div><p>表格的列变成了二重索引，为了方便后续引用，将其变为一重索引。需要注意的是，这种变换需要数据类型都为string型，如果不是，需要提前转换。当然，还有一种手动方法，变为二重索引后导出表，将原列索引删除，自己再加上索引就好。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true">#改为一重列索引表，用one_class_data2表示</span>
 one_class_data2 <span class="token operator">=</span>tmp_data2<span class="token punctuation">.</span>copy<span class="token punctuation">(</span>deep<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">#拷贝表格</span>
 one_class_data2<span class="token punctuation">.</span>columns <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"_"</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token keyword">for</span> x <span class="token keyword">in</span> one_class_data2<span class="token punctuation">.</span>columns<span class="token punctuation">.</span>ravel<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>  <span class="token comment" spellcheck="true">#将原来的二重索引的列名进行拼接</span>
 <span class="token comment" spellcheck="true"># one_class_data2.columns = tmp_data2.columns.droplevel(0)  #这个方法是直接将外围第二重索引去掉，只取第一重列索引。</span>
 one_class_data2
-</code></pre>
-<p>结果如下：</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/L1_id_oneclass.jpg" width="100%/">
-</div>  
-
-<p>可以看到，列已经变为一重，列名为二重列名拼接而成。后续步骤与第一张表一样，这里不再做解释。以上为数据清洗过程，下面对该数据进行分析。  </p>
-<h2 id="2-2-探索性数据分析EDA"><a href="#2-2-探索性数据分析EDA" class="headerlink" title="2.2 探索性数据分析EDA"></a>2.2 探索性数据分析EDA</h2><p>首先进行相关性分析。这里以表data2为例。分析的数据取较完整地一个月的时间片段，重采样为1min适当减小数据量。（记得导入表后先设置时间索引）</p>
-<pre class=" language-python"><code class="language-python">Month_data2 <span class="token operator">=</span> data2<span class="token punctuation">[</span><span class="token string">'2022-01-25 13:12:30'</span><span class="token punctuation">:</span><span class="token string">'2022-02-24 15:13:00'</span><span class="token punctuation">]</span>
+</code></pre><p>结果如下：</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/L1_id_oneclass.59gip30dtvk0.jpg" width="100%/"></div><p>可以看到，列已经变为一重，列名为二重列名拼接而成。后续步骤与第一张表一样，这里不再做解释。最后再对其进行<strong>平滑处理</strong>。平滑方式选用传统的<em>巴特沃斯</em> 低通滤波器。对于参数wn的确定，首先采样频率定为1=采样长度/采样时间（其实采样频率可以自己定，其他的频率以采样频率为基准进行计算即可，结果都一样）。截止频率需要根据实际的来，我的数据中最大的频率差不多以77个点为一个周期，所以稍微扩大下范围后计算截止频率 = 1/60（采样频率为1，那么采样时间即为周期T=1）。根据公式wn = 2*截止频率/采样频率 = 0.033。以两天的数据量为例。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 低通滤波器-巴特沃斯</span>
+<span class="token comment" spellcheck="true"># wn=2*截至频率/采样频率   如果一天采样10个点，采样频率为10，截止频率为想要滤除的频率上限或下限</span>
+<span class="token comment" spellcheck="true"># pivot_data为透视后清理完的表</span>
+twoday_data <span class="token operator">=</span> pivot_data<span class="token punctuation">[</span><span class="token string">'2022-01-26 00:00:00'</span><span class="token punctuation">:</span><span class="token string">'2022-01-28 00:00:00'</span><span class="token punctuation">]</span>
+b<span class="token punctuation">,</span> a <span class="token operator">=</span> signal<span class="token punctuation">.</span>butter<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">0.033</span><span class="token punctuation">,</span> <span class="token string">'lowpass'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#配置滤波器 8 表示滤波器的阶数</span>
+twoday_data<span class="token punctuation">[</span><span class="token string">'Te_0_filter'</span><span class="token punctuation">]</span> <span class="token operator">=</span> signal<span class="token punctuation">.</span>filtfilt<span class="token punctuation">(</span>b<span class="token punctuation">,</span> a<span class="token punctuation">,</span> twoday_data<span class="token punctuation">[</span><span class="token string">'Te_0'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre><p>滤波结果如下：</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/butter.6leaq5g4j7s0.jpg" width="50%/"></div><h2 id="2-2-探索性数据分析EDA"><a href="#2-2-探索性数据分析EDA" class="headerlink" title="2.2 探索性数据分析EDA"></a>2.2 探索性数据分析EDA</h2><p>首先进行相关性分析。这里以表data2为例。分析的数据取较完整地一个月的时间片段，重采样为1min适当减小数据量。（记得导入表后先设置时间索引）</p><pre class="language-python"><code class="language-python">Month_data2 <span class="token operator">=</span> data2<span class="token punctuation">[</span><span class="token string">'2022-01-25 13:12:30'</span><span class="token punctuation">:</span><span class="token string">'2022-02-24 15:13:00'</span><span class="token punctuation">]</span>
 <span class="token comment" spellcheck="true"># 重采样一分钟(一个月数据)</span>
 Month_data2_1T <span class="token operator">=</span> Month_data2<span class="token punctuation">.</span>resample<span class="token punctuation">(</span><span class="token string">'T'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span>
 Month_data2_1T<span class="token operator">=</span>Month_data2_1T<span class="token punctuation">.</span>round<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#保留两位小数。</span>
 <span class="token comment" spellcheck="true"># 相关系数</span>
 Month_data2_1T<span class="token punctuation">.</span>corr<span class="token punctuation">(</span><span class="token punctuation">)</span>
-</code></pre>
-<p>这里仅展示部分结果图：</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/Month_data2_1T_corr.jpg" width="50%/">
-</div>  
-
-<p>可以看到，每个变量间的相关程度都很高，不利用互相作为特征值。<br>对数据的自相关性和偏相关性进行分析。自相关：描述的是一组时间序列和它前面间隔n个时刻的一组时间序列之前的相关性。偏自相关：描述的是一组时间序列和它前面间隔n个时刻的一组时间序列之前的偏相关性。这里的偏相关性可以从本质上理解为去除了样本之间的干涉，也就是更早时刻的相关性影响。</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 自相关，偏自相关，列出每一列的相关图</span>
+</code></pre><p>这里仅展示部分结果图：</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/Month_data2_1T_corr.5gurkritpvs0.jpg" width="50%/"></div><p>可以看到，每个变量间的相关程度都很高，不利用互相作为特征值。<br>对数据的自相关性和偏相关性进行分析。自相关：描述的是一组时间序列和它前面间隔n个时刻的一组时间序列之前的相关性。偏自相关：描述的是一组时间序列和它前面间隔n个时刻的一组时间序列之前的偏相关性。这里的偏相关性可以从本质上理解为去除了样本之间的干涉，也就是更早时刻的相关性影响。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 自相关，偏自相关，列出每一列的相关图</span>
 col <span class="token operator">=</span> Month_data2_1T<span class="token punctuation">.</span>columns
 <span class="token keyword">for</span> c <span class="token keyword">in</span> col<span class="token punctuation">:</span>  
     fig <span class="token operator">=</span> plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -525,26 +184,11 @@ col <span class="token operator">=</span> Month_data2_1T<span class="token punct
     plot_acf<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">,</span>lags<span class="token operator">=</span><span class="token number">50</span><span class="token punctuation">,</span>ax <span class="token operator">=</span> ax1<span class="token punctuation">)</span>
     plot_pacf<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">,</span>lags<span class="token operator">=</span><span class="token number">50</span><span class="token punctuation">,</span>ax <span class="token operator">=</span> ax2<span class="token punctuation">)</span>
     plt<span class="token punctuation">.</span>tight_layout<span class="token punctuation">(</span><span class="token punctuation">)</span>
-</code></pre>
-<p>同样的，展示部分结果图。</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/Month_data2_1T_acf.jpg" width="60%/">
-</div>  
-
-<p>研究自相关、偏相关可用于判断是否适合使用时间预测方法。该图可应用于LSTM算法，作为参数选择的依据。具体使用方法有待明确。<br>查看温湿度的统计分布。这里仅仅是查看下数据分布，目前没有对于其分析的一些想法。</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 管道温湿度统计分布图</span>
+</code></pre><p>同样的，展示部分结果图。</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/Month_data2_1T_acf.3xqf5jmk4f80.jpg" width="60%/"></div><p>研究自相关、偏相关可用于判断是否适合使用时间预测方法,也可用于查看周期（下面会有演示）。该图可应用于LSTM算法，作为参数选择的依据。具体使用方法有待明确。<br>查看温湿度的统计分布。这里仅仅是查看下数据分布，目前没有对于其分析的一些想法。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 管道温湿度统计分布图</span>
 <span class="token keyword">for</span> c <span class="token keyword">in</span> col<span class="token punctuation">:</span> 
     plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-    sns<span class="token punctuation">.</span>distplot<span class="token punctuation">(</span>Month_data_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">,</span> bins<span class="token operator">=</span>int<span class="token punctuation">(</span>np<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>len<span class="token punctuation">(</span>Month_data_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-</code></pre>
-<p>展示部分结果图。</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/Month_data2_1T_distplot.jpg" width="60%/">
-</div>  
-
-
-<p>数据平稳性判断，使用单位根检验法。</p>
-<pre class=" language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">check_stationarity</span><span class="token punctuation">(</span>y<span class="token punctuation">,</span> lags_plots<span class="token operator">=</span><span class="token number">48</span><span class="token punctuation">,</span> figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">22</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    sns<span class="token punctuation">.</span>distplot<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">,</span> bins<span class="token operator">=</span>int<span class="token punctuation">(</span>np<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>len<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre><p>展示部分结果图。</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/Month_data2_1T_distplot.462fv8dw1b00.jpg" width="60%/"></div><p>数据平稳性判断，使用单位根检验法。</p><pre class="language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">check_stationarity</span><span class="token punctuation">(</span>y<span class="token punctuation">,</span> lags_plots<span class="token operator">=</span><span class="token number">48</span><span class="token punctuation">,</span> figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">22</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token string">"Use Series as parameter"</span>
     <span class="token comment" spellcheck="true"># Creating plots of the DF</span>
     y <span class="token operator">=</span> pd<span class="token punctuation">.</span>Series<span class="token punctuation">(</span>y<span class="token punctuation">)</span>
@@ -589,24 +233,13 @@ col <span class="token operator">=</span> Month_data2_1T<span class="token punct
 
 <span class="token comment" spellcheck="true"># 检验平稳性</span>
 check_stationarity<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span><span class="token string">'Te_0'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-</code></pre>
-<blockquote>
-<p>输出结果为：<br><br>Results of Dickey-Fuller Test:<br><br>Test Statistic                    -1.4583<br><br>p-value                            0.5540<br><br>Lags Used                         55.0000<br><br>Number of Observations Used    43266.0000<br><br>Critical Value (1%)               -3.4305<br><br>Critical Value (5%)               -2.8616<br><br>Critical Value (10%)              -2.5668<br><br>dtype: float64<br><br><br><br>The Test Statistics is higher than the Critical Value of 5%.<br><br>The serie isn’t stationary  </p>
-</blockquote>
-<p>判断平稳性两个标准：Test Statistic小于Critical Value (5%)　或是p-value小于0.05。平稳性是多数统计学模型的必要条件之一。可见原数据并不是平稳序列。<br>对于非平稳序列，可使用一阶差分使其平稳化。</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true">#序列平稳化，一阶差分</span>
-Month_data_1T<span class="token punctuation">[</span><span class="token string">'Te_0_diff'</span><span class="token punctuation">]</span> <span class="token operator">=</span> Month_data_1T<span class="token punctuation">[</span><span class="token string">'Te_0'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>diff<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
-</code></pre>
-<p>其稳定性结果为：</p>
-<blockquote>
-<p>Results of Dickey-Fuller Test:<br><br>Test Statistic                   -51.9122<br><br>p-value                            0.0000<br><br>Lags Used                         54.0000<br><br>Number of Observations Used    43267.0000<br><br>Critical Value (1%)               -3.4305<br><br>Critical Value (5%)               -2.8616<br><br>Critical Value (10%)              -2.5668<br><br>dtype: float64<br><br><br><br>The Test Statistics is lower than the Critical Value of 5%.<br><br>The serie seems to be stationary</p>
-</blockquote>
-<p>可见一阶差分可以有效是原序列平稳。后期可利用差分序列进行异常检测训练。<br>时间序列分解：所谓分解就是将时序数据分离成不同的成分，分解为：长期趋势Trend、季节性Seasonality和随机残差Residuals。分解序列后可针对每个子序列分别建模处理，如建模趋势后，在原数据中减去趋势的干扰。又或者当作特征值。</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 管道温湿度时序序列分解：趋势+季节性+残差</span>
+</code></pre><blockquote><p>输出结果为：<br><br>Results of Dickey-Fuller Test:<br><br>Test Statistic -1.4583<br><br>p-value 0.5540<br><br>Lags Used 55.0000<br><br>Number of Observations Used 43266.0000<br><br>Critical Value (1%) -3.4305<br><br>Critical Value (5%) -2.8616<br><br>Critical Value (10%) -2.5668<br><br>dtype: float64<br><br><br><br>The Test Statistics is higher than the Critical Value of 5%.<br><br>The serie isn’t stationary</p></blockquote><p>判断平稳性两个标准：Test Statistic小于Critical Value (5%)　或是p-value小于0.05。平稳性是多数统计学模型的必要条件之一。可见原数据并不是平稳序列。<br>对于非平稳序列，可使用一阶差分使其平稳化。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true">#序列平稳化，一阶差分</span>
+Month_data2_1T<span class="token punctuation">[</span><span class="token string">'Te_0_diff'</span><span class="token punctuation">]</span> <span class="token operator">=</span> Month_data2_1T<span class="token punctuation">[</span><span class="token string">'Te_0'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>diff<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+</code></pre><p>其稳定性结果为：</p><blockquote><p>Results of Dickey-Fuller Test:<br><br>Test Statistic -51.9122<br><br>p-value 0.0000<br><br>Lags Used 54.0000<br><br>Number of Observations Used 43267.0000<br><br>Critical Value (1%) -3.4305<br><br>Critical Value (5%) -2.8616<br><br>Critical Value (10%) -2.5668<br><br>dtype: float64<br><br><br><br>The Test Statistics is lower than the Critical Value of 5%.<br><br>The serie seems to be stationary</p></blockquote><p>可见一阶差分可以有效是原序列平稳。后期可利用差分序列进行异常检测训练。<br>时间序列分解：所谓分解就是将时序数据分离成不同的成分，分解为：长期趋势Trend、季节性Seasonality和随机残差Residuals。分解序列后可针对每个子序列分别建模处理，如建模趋势后，在原数据中减去趋势的干扰。又或者当作特征值。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 管道温湿度时序序列分解：趋势+季节性+残差</span>
 col <span class="token operator">=</span> Month_data2_1T<span class="token punctuation">.</span>columns
 <span class="token keyword">for</span> c <span class="token keyword">in</span> col<span class="token punctuation">:</span>  
-    <span class="token comment" spellcheck="true">#用加性模型，周期1440为1440min，分解数据时间频率为1min，一天为1440min。这里将一天设为周期。</span>
-    decompose_result <span class="token operator">=</span> seasonal_decompose<span class="token punctuation">(</span>Month_data_1T2<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">,</span> model<span class="token operator">=</span><span class="token string">"additive"</span><span class="token punctuation">,</span> period<span class="token operator">=</span><span class="token number">1440</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">#用加性模型，周期1440为1440min，分解数据时间频率为1min，一天为1440min。这里将一天设为周期，那么分解出的季节性数据以1天为周期</span>
+    decompose_result <span class="token operator">=</span> seasonal_decompose<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">,</span> model<span class="token operator">=</span><span class="token string">"additive"</span><span class="token punctuation">,</span> period<span class="token operator">=</span><span class="token number">1440</span><span class="token punctuation">)</span>
     fig <span class="token operator">=</span> plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
     ax1 <span class="token operator">=</span> fig<span class="token punctuation">.</span>add_subplot<span class="token punctuation">(</span><span class="token number">411</span><span class="token punctuation">)</span>
     ax2 <span class="token operator">=</span> fig<span class="token punctuation">.</span>add_subplot<span class="token punctuation">(</span><span class="token number">412</span><span class="token punctuation">)</span>
@@ -625,414 +258,44 @@ col <span class="token operator">=</span> Month_data2_1T<span class="token punct
     ax3<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>decompose_result<span class="token punctuation">.</span>seasonal<span class="token punctuation">)</span>
     ax4<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>decompose_result<span class="token punctuation">.</span>resid<span class="token punctuation">)</span>
     plt<span class="token punctuation">.</span>tight_layout<span class="token punctuation">(</span><span class="token punctuation">)</span>
-</code></pre>
-<p>部分结果如下：</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/Month_data2_1T_decompose.jpg" width="80%/">
-</div>  
-
-
-<p>接下来进行周期性检验,使用频谱图检测周期：</p>
-<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 查看频谱周期图与表</span>
-<span class="token keyword">def</span> <span class="token function">is_periodicity</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> fs <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> show_pic<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">:</span> 
+</code></pre><p>部分结果如下：</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/Month_data2_1T_decompose.7bi8h01gdf40.jpg" width="80%/"></div><p>接下来进行周期性检验。首先使用FFT查看频谱图：</p><pre class="language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">define_fft</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> fs <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> show_pic<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">:</span> 
     <span class="token triple-quoted-string string">""" 
     # Parameters  
 
-    data: 检测数据，ndarray类型 
+    data: 检测数据，dataframe类型 
     show_pic: 是否展示图片 
-    fs: 自定义频率，如原表频率为1分钟，要想T为1天，输入fs=1440。
-    # return  
-
-    result.head(10): 返回频谱图中前十个最大频谱值所在的行 
+    fs: 采样频率，采样时长除以采样点数 = 采样频率
     """</span> 
-    f<span class="token punctuation">,</span> Pxx_den <span class="token operator">=</span> signal<span class="token punctuation">.</span>periodogram<span class="token punctuation">(</span>data<span class="token punctuation">,</span>fs<span class="token punctuation">)</span>  
-    T <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">/</span>f
-    result <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>columns<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'freq'</span><span class="token punctuation">,</span> <span class="token string">'spec'</span><span class="token punctuation">]</span><span class="token punctuation">)</span> 
-    result<span class="token punctuation">[</span><span class="token string">'freq'</span><span class="token punctuation">]</span> <span class="token operator">=</span> f 
-    result<span class="token punctuation">[</span><span class="token string">'spec'</span><span class="token punctuation">]</span> <span class="token operator">=</span> Pxx_den 
-    result<span class="token punctuation">[</span><span class="token string">'T'</span><span class="token punctuation">]</span> <span class="token operator">=</span> T
+    n <span class="token operator">=</span> data<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+    x <span class="token operator">=</span> data<span class="token punctuation">.</span>values
+    yy <span class="token operator">=</span> fft<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+    fre <span class="token operator">=</span> fftfreq<span class="token punctuation">(</span>n<span class="token punctuation">,</span> <span class="token number">1</span><span class="token operator">/</span>fs<span class="token punctuation">)</span>            <span class="token comment" spellcheck="true">#求频率横坐标</span>
+    indices <span class="token operator">=</span> np<span class="token punctuation">.</span>where<span class="token punctuation">(</span>fre <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span>        <span class="token comment" spellcheck="true">#筛选大于零的频率</span>
+    w_pos <span class="token operator">=</span> <span class="token number">2</span><span class="token operator">*</span>abs<span class="token punctuation">(</span>yy<span class="token punctuation">[</span>indices<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">/</span>n    <span class="token comment" spellcheck="true">#计算幅度值</span>
+    F_pos <span class="token operator">=</span> fre<span class="token punctuation">[</span>indices<span class="token punctuation">]</span>            
+
+    result_fft <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>columns<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'freq'</span><span class="token punctuation">,</span> <span class="token string">'spec'</span><span class="token punctuation">,</span> <span class="token string">'T'</span><span class="token punctuation">]</span><span class="token punctuation">)</span> 
+    result_fft<span class="token punctuation">[</span><span class="token string">'freq'</span><span class="token punctuation">]</span> <span class="token operator">=</span> F_pos 
+    result_fft<span class="token punctuation">[</span><span class="token string">'spec'</span><span class="token punctuation">]</span> <span class="token operator">=</span> w_pos 
+    result_fft<span class="token punctuation">[</span><span class="token string">'T'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">/</span>F_pos<span class="token operator">/</span><span class="token number">1440</span>
     <span class="token comment" spellcheck="true"># 按照频率强弱程度降序排列 </span>
-    result <span class="token operator">=</span> result<span class="token punctuation">.</span>sort_values<span class="token punctuation">(</span>by<span class="token operator">=</span><span class="token string">'spec'</span><span class="token punctuation">,</span> ascending<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span> 
-    <span class="token comment" spellcheck="true"># 频率转换为周期 </span>
-    <span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token keyword">if</span> show_pic <span class="token keyword">is</span> <span class="token boolean">True</span><span class="token punctuation">:</span> 
-        plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>T<span class="token punctuation">,</span> Pxx_den<span class="token punctuation">)</span> 
-        plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span> 
-    <span class="token keyword">return</span> result<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
-</code></pre>
-<p>对分解出的残差进行检测，输出结果如下。</p>
-<div align="center">
-<img src="../img/Anomaly_detection_process_img/Month_data2_1T_periodogram.jpg" width="40%/">
-<img src="../img/Anomaly_detection_process_img/Month_data2_1T_residperiod.jpg" width="30%/">
-</div>  
+    result_fft <span class="token operator">=</span> result_fft<span class="token punctuation">.</span>sort_values<span class="token punctuation">(</span>by<span class="token operator">=</span><span class="token string">'spec'</span><span class="token punctuation">,</span> ascending<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span> 
+    <span class="token keyword">print</span><span class="token punctuation">(</span>result_fft<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> show_pic <span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># 频率转换为周期 </span>
+        plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">/</span>F_pos<span class="token operator">/</span><span class="token number">1440</span><span class="token punctuation">,</span> w_pos<span class="token punctuation">)</span>
+        plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token number">0</span>
 
-
-        </div>
-
-        
-            <div class="post-copyright-info">
-                <div class="article-copyright-info-container">
-    <ul>
-        <li>本文标题：时序数据异常检测流程与项目实战</li>
-        <li>本文作者：EasyBoy</li>
-        <li>创建时间：2022-03-25 20:23:25</li>
-        <!-- <li>更新于：2022-04-09 00:00:00</li> -->
-        <li>
-            本文链接：https://easyboy-blog.com/anomaly-detection-process.html
-        </li>
-        <li>
-            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
-        </li>
-    </ul>
-</div>
-
-            </div>
-        
-
-        
-            <ul class="post-tags-box">
-                
-                    <li class="tag-item">
-                        <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">#机器学习</a>&nbsp;
-                    </li>
-                
-                    <li class="tag-item">
-                        <a href="/tags/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE/">#时序数据</a>&nbsp;
-                    </li>
-                
-                    <li class="tag-item">
-                        <a href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">#异常处理</a>&nbsp;
-                    </li>
-                
-            </ul>
-        
-
-        
-            <div class="article-nav">
-                
-                
-                    <div class="article-next">
-                        <a class="next"
-                           rel="next"
-                           href="/compilation-process.html"
-                        >
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">c/c++编译流程</span>
-                                <span class="post-nav-item">下一篇</span>
-                            </span>
-                            <span class="right arrow-icon flex-center">
-                              <i class="fas fa-chevron-right"></i>
-                            </span>
-                        </a>
-                    </div>
-                
-            </div>
-        
-
-        
-            <div class="comment-container">
-                <div class="comments-container">
-    <div id="comment-anchor"></div>
-    <div class="comment-area-title">
-        <i class="fas fa-comments">&nbsp;评论</i>
-    </div>
-    
-
-        
-            
-    <div class="valine-container">
-        <script data-pjax
-                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
-        <div id="vcomments"></div>
-        <script data-pjax>
-            function loadValine() {
-                new Valine({
-                    el: '#vcomments',
-                    appId: 'TSl5PlExO22wiwkA3e15kGvM-gzGzoHsz',
-                    appKey: '36AERjunsq15rL0xcz3ovKbG',
-                    meta: ['nick', 'mail', 'link'],
-                    avatar: 'wavatar',
-                    enableQQ: true,
-                    placeholder: '😜 尽情吐槽吧~',
-                    lang: 'zh-CN'.toLowerCase()
-                });
-
-                function getAuthor(language) {
-                    switch (language) {
-                        case 'en':
-                            return 'Author';
-                        case 'zh-CN':
-                            return '博主';
-                        default:
-                            return 'Master';
-                    }
-                }
-
-                // Add "Author" identify
-                const getValineDomTimer = setInterval(() => {
-                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
-                    if (vcards.length > 0) {
-                        let author = 'EasyBoy';
-
-                        if (author) {
-                            for (let vcard of vcards) {
-                                const vnick_dom = vcard.querySelector('.vhead .vnick');
-                                const vnick = vnick_dom.innerHTML;
-                                if (vnick === author) {
-                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
-                                }
-                            }
-                        }
-                        clearInterval(getValineDomTimer);
-                    } else {
-                        clearInterval(getValineDomTimer);
-                    }
-                }, 2000);
-            }
-
-            if ('true') {
-                const loadValineTimeout = setTimeout(() => {
-                    loadValine();
-                    clearTimeout(loadValineTimeout);
-                }, 1000);
-            } else {
-                window.addEventListener('DOMContentLoaded', loadValine);
-            }
-        </script>
-    </div>
-
-
-
-        
-    
-</div>
-
-            </div>
-        
-    </div>
-</div>
-
-
-                
-            </div>
-
-        </div>
-
-        <div class="page-main-content-bottom">
-            <footer class="footer">
-    <div class="info-container">
-        <div class="copyright-info info-item">
-            &copy;
-            
-              <span>2020</span>
-              -
-            
-            2022&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">EasyBoy</a>
-        </div>
-        
-            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-            <div class="website-count info-item">
-                
-                    <span id="busuanzi_container_site_uv">
-                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
-                    </span>
-                
-                
-                    <span id="busuanzi_container_site_pv">
-                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
-                    </span>
-                
-            </div>
-        
-        <div class="theme-info info-item">
-            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
-        </div>
-        
-        
-    </div>
-</footer>
-
-        </div>
-    </div>
-
-    
-        <div class="post-tools">
-            <div class="post-tools-container">
-    <ul class="tools-list">
-        <!-- TOC aside toggle -->
-        
-            <li class="tools-item page-aside-toggle">
-                <i class="fas fa-outdent"></i>
-            </li>
-        
-
-        <!-- go comment -->
-        
-            <li class="go-comment">
-                <i class="fas fa-comment"></i>
-            </li>
-        
-    </ul>
-</div>
-
-        </div>
-    
-
-    <div class="right-bottom-side-tools">
-        <div class="side-tools-container">
-    <ul class="side-tools-list">
-        <li class="tools-item tool-font-adjust-plus flex-center">
-            <i class="fas fa-search-plus"></i>
-        </li>
-
-        <li class="tools-item tool-font-adjust-minus flex-center">
-            <i class="fas fa-search-minus"></i>
-        </li>
-
-        <li class="tools-item tool-expand-width flex-center">
-            <i class="fas fa-arrows-alt-h"></i>
-        </li>
-
-        <li class="tools-item tool-dark-light-toggle flex-center">
-            <i class="fas fa-moon"></i>
-        </li>
-
-        <!-- rss -->
-        
-            <li class="tools-item rss flex-center">
-                <a class="flex-center"
-                   href="/atom.xml"
-                   target="_blank"
-                >
-                    <i class="fas fa-rss"></i>
-                </a>
-            </li>
-        
-
-        
-            <li class="tools-item tool-scroll-to-top flex-center">
-                <i class="fas fa-arrow-up"></i>
-            </li>
-        
-
-        <li class="tools-item tool-scroll-to-bottom flex-center">
-            <i class="fas fa-arrow-down"></i>
-        </li>
-    </ul>
-
-    <ul class="exposed-tools-list">
-        <li class="tools-item tool-toggle-show flex-center">
-            <i class="fas fa-cog fa-spin"></i>
-        </li>
-        
-    </ul>
-</div>
-
-    </div>
-
-    
-        <aside class="page-aside">
-            <div class="post-toc-wrap">
-    <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%80%BB%E4%BD%93%E6%B5%81%E7%A8%8B%E4%BB%8B%E7%BB%8D"><span class="nav-text">1.总体流程介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98"><span class="nav-text">2.项目实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97"><span class="nav-text">2.1 数据清洗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E6%8E%A2%E7%B4%A2%E6%80%A7%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90EDA"><span class="nav-text">2.2 探索性数据分析EDA</span></a></li></ol></li></ol>
-    </div>
-</div>
-        </aside>
-    
-
-    <div class="image-viewer-container">
-    <img src="">
-</div>
-
-
-    
-        <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-          <span class="search-input-field-pre">
-            <i class="fas fa-keyboard"></i>
-          </span>
-            <div class="search-input-container">
-                <input autocomplete="off"
-                       autocorrect="off"
-                       autocapitalize="off"
-                       placeholder="搜索..."
-                       spellcheck="false"
-                       type="search"
-                       class="search-input"
-                >
-            </div>
-            <span class="popup-btn-close">
-                <i class="fas fa-times"></i>
-            </span>
-        </div>
-        <div id="search-result">
-            <div id="no-result">
-                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
-            </div>
-        </div>
-    </div>
-</div>
-
-    
-
-</main>
-
-
-
-<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/dark-light-toggle.js"></script>
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/local-search.js"></script>
-
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/code-copy.js"></script>
-
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/lazyload.js"></script>
-
-
-<div class="post-scripts pjax">
-    
-        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/toc.js"></script>
-    
-</div>
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/libs/pjax.min.js"></script>
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        window.pjax = new Pjax({
-            selectors: [
-                'head title',
-                '.page-container',
-                '.pjax'
-            ],
-            history: true,
-            debug: false,
-            cacheBust: false,
-            timeout: 0,
-            analytics: false,
-            currentUrlFullReload: false,
-            scrollRestoration: false,
-            // scrollTo: true,
-        });
-
-        document.addEventListener('pjax:send', () => {
-            KEEP.utils.pjaxProgressBarStart();
-        });
-
-        document.addEventListener('pjax:complete', () => {
-            KEEP.utils.pjaxProgressBarEnd();
-            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
-            KEEP.refresh();
-        });
-    });
-</script>
-
-
-
-</body>
-</html>
+define_fft<span class="token punctuation">(</span>Month_data2_1T<span class="token punctuation">[</span><span class="token string">'Te_0'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>fs<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>show_pic<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+</code></pre><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/Month_data_1T_periodogram.bx0uzqbkjcw.jpg" width="40%/"> <img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/Month_data_1T_residperiod.4rqdgw1afwu0.jpg" width="30%/"></div><p>查看左侧频谱图，可以发现图是有问题的。在周期最大的三个点，也即频率最小的三个点处出现了很大的峰值，低频成分上翘，这明显不对。考虑原因可能有二。</p><ol><li>原数据存在直流偏移的影响。<br>解决办法：减去直流量，试减去平均值</li><li>原数据中趋势的存在干扰了频谱分析。当信号中有明显的趋势项而未消除时，进行相关性分析和功率谱密度分析时会出现畸变，造成低频成分上翘甚至淹没主频成分。<br>解决办法：去趋势。</li></ol><p>对原数据减去平均值后进行FFT分析，发现频谱图的形状并没有变化，改试方案2。去趋势的方法在网上有许多，这里使用了两种办法：多项式拟合去趋势和时序序列分解。</p><pre class="language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 多项式拟合去趋势,使用滤波后的数据</span>
+n <span class="token operator">=</span> Month_data2_1T<span class="token punctuation">[</span><span class="token string">'Te_0_filter'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+x<span class="token operator">=</span>np<span class="token punctuation">.</span>linspace<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token punctuation">,</span> n<span class="token punctuation">)</span>
+y <span class="token operator">=</span> Month_data_1T<span class="token punctuation">[</span><span class="token string">'Te_0_filter'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>values
+z1 <span class="token operator">=</span> np<span class="token punctuation">.</span>polyfit<span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>              <span class="token comment" spellcheck="true"># 曲线拟合，返回值为多项式的各项系数，10为阶数，具体数据选取看曲线拟合程度，可进行可视化查看</span>
+p1 <span class="token operator">=</span> np<span class="token punctuation">.</span>poly1d<span class="token punctuation">(</span>z1<span class="token punctuation">)</span>                    <span class="token comment" spellcheck="true"># 返回值为多项式的表达式，也就是函数式子</span>
+<span class="token comment" spellcheck="true"># print(p1)</span>
+y_pred <span class="token operator">=</span> p1<span class="token punctuation">(</span>x<span class="token punctuation">)</span>                        <span class="token comment" spellcheck="true"># 根据函数的多项式表达式，求解 y,即趋势</span>
+Month_data_1T<span class="token punctuation">[</span><span class="token string">'x'</span><span class="token punctuation">]</span><span class="token operator">=</span>Month_data_1T<span class="token punctuation">[</span><span class="token string">'Te_0_filter'</span><span class="token punctuation">]</span><span class="token operator">-</span>y_pred
+define_fft<span class="token punctuation">(</span>Month_data_1T<span class="token punctuation">[</span><span class="token string">'x'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>fs<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>show_pic<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+</code></pre><p>下图为原数据曲线图、趋势图、原数据去趋势图和FFT图。可以看出，用拟合法去趋势后，FFT图尾端翘起现象几乎没有了，但仍有小尾巴残留。</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/polyfit.1wq4d6hwhjq8.jpg" width="80%/"> <img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/polyfit_detrend.2eofsy7hwrwg.jpg" width="80%/"> <img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/ployfit_FFT.4u82p09d7n60.jpg" width="50%/"></div><p>接下来是由时序序列分解法。该方法上面讲过了，操作步骤一致，只是在分解趋势适合，分解了两次，使用77周期分解以此，发现还有周期现象，又使用1440周期对分解出的趋势分解了一次，对用原数据减去二次趋势，再求FFT，结果如图。第一张为去趋势后的图，第二张为FFT结果图。可以看出，该方法去趋势效果更好。</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/twice_detrend.7jhgdh1lahw0.jpg" width="80%/"> <img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/twice_detrend_FFT.ekqba34lveo.jpg" width="40%/"></div><p>根据频谱图结果，列出最大的三个能量谱的点依次为1天，0.5天，77min。可能的周期也是这三个点。再根据这三个点看自相关图，分别列出滞后点为1000和10000的相关图。如图所示。</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/Anomaly_detection_process_img/acf_1000.hy1dzybmthk.jpg" width="80%/"></div><p>对于自相关图，当序列存在周期时，会在周期出出现一个高峰。从图中可以看出，曲线分别以约77和1440为周期处出现高峰。再结合实际，77min大致为系统运行一个周期，1440min为系统运行一天。由此可见，数据约以77min和1440min为周期。</p></div><div class="post-copyright-info"><div class="article-copyright-info-container"><ul><li>本文标题：时序数据异常检测流程与项目实战</li><li>本文作者：EasyBoy</li><li>创建时间：2022-03-25 20:23:25</li><li>本文链接：https://easyboy-blog.com/anomaly-detection-process.html</li><li>版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div></div><ul class="post-tags-box"><li class="tag-item"><a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">#机器学习</a>&nbsp;</li><li class="tag-item"><a href="/tags/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE/">#时序数据</a>&nbsp;</li><li class="tag-item"><a href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">#异常处理</a>&nbsp;</li></ul><div class="article-nav"><div class="article-next"><a class="next" rel="next" href="/compilation-process.html"><span class="title flex-center"><span class="post-nav-title-item">c/c++编译流程</span> <span class="post-nav-item">下一篇</span> </span><span class="right arrow-icon flex-center"><i class="fas fa-chevron-right"></i></span></a></div></div><div class="comment-container"><div class="comments-container"><div id="comment-anchor"></div><div class="comment-area-title"><i class="fas fa-comments">&nbsp;评论</i></div><div class="valine-container"><script data-pjax src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script><div id="vcomments"></div><script data-pjax>function loadValine(){function e(e){switch(e){case"en":return"Author";case"zh-CN":return"博主";default:return"Master"}}new Valine({el:"#vcomments",appId:"TSl5PlExO22wiwkA3e15kGvM-gzGzoHsz",appKey:"36AERjunsq15rL0xcz3ovKbG",meta:["nick","mail","link"],avatar:"wavatar",enableQQ:!0,placeholder:"😜 尽情吐槽吧~",lang:"zh-CN".toLowerCase()});const a=setInterval(()=>{const n=document.querySelectorAll("#vcomments .vcards .vcard");if(n.length>0){let t="EasyBoy";if(t)for(let a of n){const n=a.querySelector(".vhead .vnick"),l=n.innerHTML;l===t&&(n.innerHTML=`${l} <span class="author">${e(KEEP.hexo_config.language)}</span>`)}clearInterval(a)}else clearInterval(a)},2e3)}{const e=setTimeout(()=>{loadValine(),clearTimeout(e)},1e3)}</script></div></div></div></div></div></div></div><div class="page-main-content-bottom"><footer class="footer"><div class="info-container"><div class="copyright-info info-item">&copy; <span>2020</span> - 2022&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">EasyBoy</a></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="website-count info-item"><span id="busuanzi_container_site_uv">访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp; </span><span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span></div><div class="theme-info info-item">由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a></div></div></footer></div></div><div class="post-tools"><div class="post-tools-container"><ul class="tools-list"><li class="tools-item page-aside-toggle"><i class="fas fa-outdent"></i></li><li class="go-comment"><i class="fas fa-comment"></i></li></ul></div></div><div class="right-bottom-side-tools"><div class="side-tools-container"><ul class="side-tools-list"><li class="tools-item tool-font-adjust-plus flex-center"><i class="fas fa-search-plus"></i></li><li class="tools-item tool-font-adjust-minus flex-center"><i class="fas fa-search-minus"></i></li><li class="tools-item tool-expand-width flex-center"><i class="fas fa-arrows-alt-h"></i></li><li class="tools-item tool-dark-light-toggle flex-center"><i class="fas fa-moon"></i></li><li class="tools-item rss flex-center"><a class="flex-center" href="/atom.xml" target="_blank"><i class="fas fa-rss"></i></a></li><li class="tools-item tool-scroll-to-top flex-center"><i class="fas fa-arrow-up"></i></li><li class="tools-item tool-scroll-to-bottom flex-center"><i class="fas fa-arrow-down"></i></li></ul><ul class="exposed-tools-list"><li class="tools-item tool-toggle-show flex-center"><i class="fas fa-cog fa-spin"></i></li></ul></div></div><aside class="page-aside"><div class="post-toc-wrap"><div class="post-toc"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%80%BB%E4%BD%93%E6%B5%81%E7%A8%8B%E4%BB%8B%E7%BB%8D"><span class="nav-text">1.总体流程介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98"><span class="nav-text">2.项目实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97"><span class="nav-text">2.1 数据清洗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E6%8E%A2%E7%B4%A2%E6%80%A7%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90EDA"><span class="nav-text">2.2 探索性数据分析EDA</span></a></li></ol></li></ol></div></div></aside><div class="image-viewer-container"><img src=""></div><div class="search-pop-overlay"><div class="popup search-popup"><div class="search-header"><span class="search-input-field-pre"><i class="fas fa-keyboard"></i></span><div class="search-input-container"><input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="搜索..." spellcheck="false" type="search" class="search-input"></div><span class="popup-btn-close"><i class="fas fa-times"></i></span></div><div id="search-result"><div id="no-result"><i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i></div></div></div></div></main><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/dark-light-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/local-search.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/code-copy.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/lazyload.js"></script><div class="post-scripts pjax"><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/toc.js"></script></div><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/libs/pjax.min.js"></script><script>window.addEventListener("DOMContentLoaded",()=>{window.pjax=new Pjax({selectors:["head title",".page-container",".pjax"],history:!0,debug:!1,cacheBust:!1,timeout:0,analytics:!1,currentUrlFullReload:!1,scrollRestoration:!1}),document.addEventListener("pjax:send",()=>{KEEP.utils.pjaxProgressBarStart()}),document.addEventListener("pjax:complete",()=>{KEEP.utils.pjaxProgressBarEnd(),window.pjax.executeScripts(document.querySelectorAll("script[data-pjax], .pjax script")),KEEP.refresh()})})</script></body></html>
