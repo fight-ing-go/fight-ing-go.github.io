@@ -6,7 +6,7 @@
   <link href="https://easyboy-blog.com/atom.xml" rel="self"/>
   
   <link href="https://easyboy-blog.com/"/>
-  <updated>2022-04-14T16:00:00.000Z</updated>
+  <updated>2022-04-20T12:32:41.094Z</updated>
   <id>https://easyboy-blog.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>centos7安装QT及环境配置</title>
+    <link href="https://easyboy-blog.com/centos7-an-zhuang-qt-ji-huan-jing-pei-zhi.html"/>
+    <id>https://easyboy-blog.com/centos7-an-zhuang-qt-ji-huan-jing-pei-zhi.html</id>
+    <published>2022-04-20T11:53:04.832Z</published>
+    <updated>2022-04-20T12:32:41.094Z</updated>
+    
+    <content type="html"><![CDATA[<ol><li><p>正常下载安装QT</p></li><li><p>打开QT，打开工具-&gt;选项-&gt;Kits，手动添加一个kit(不懂为啥自动检测出来的都不好使，我就全部都手动添加了)，名称和自动的一样就好。</p><span id="more"></span>  <div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/centos7安装QT及环境配置/10.4dpjrrcig4g0.jpg" width="60%/"></div>  </li><li><p>首先设置QT versions,手动添加qmake，路劲就是你安装QT的地方，和自动检测出来的一样，设置完点击Apply。</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/centos7安装QT及环境配置/1.5d7pkq3aynw0.jpg" width="60%/"></div> </li><li><p>然后是添加编译器，这个比较麻烦，需要安装gcc，下面具体说一下操作步骤。</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/centos7安装QT及环境配置/2.1zgz8yzam9a8.jpg" width="60%/"></div></li></ol><ul><li><p>回到centos界面，打开终端，执行命令 gcc -v，查看是否已经安装gcc,我这里已经安装过了，用的yum自动给我下的，centos7下载的就是这个4.8.5版本的,但这个版本有问题，不支持c++11，所以还需要换更高些的版本。（没下载的话别用yum下，要么自己找高版本下，要么看我后面）</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/centos7安装QT及环境配置/3.uxn6sxffcn4.jpg" width="60%/"></div> </li><li><p>gcc升级这步骤浪费了我很多时间，但搞完回头一看，其实步骤很简单。首先一定要看看有没有网，ping一下看看，虚拟机联网百度一下，这里有个问题是试过百度方法后依然不行，service network start命令无法启动，然后看到了一个大佬的评论，设置一下IP地址就好了，命令是：dhclient ens33，这里的ens33是自己网卡名字，前面设置联网的过程应该有看到过，自己更改就可以了。有网之后分别执行下面三条命令：</p><pre><code>sudo yum install centos-release-sclsudo yum install devtoolset-8-gcc*scl enable devtoolset-8 bash</code></pre><blockquote><p>这里可以自己选择版本，利用centos-release-scl工具，让你不需要重写编译gcc，能同时保留多个版本的gcc，你需要哪个版本enable一下。执行完后再看一下版本是否更新了。用这个工具缺点是重新启动需要再次enable，可以设置开机自启动，我还没设置，因为QT里不需要，设置一下路径就Ok了。开机启动命令是“ echo “source /opt/rh/devtoolset-9/enable” &gt;&gt; /etc/profile ”，我还没试，不懂行不行。</p></blockquote></li><li><p>查看gcc的路径</p><div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/centos7安装QT及环境配置/4.7c8mgb783300.jpg" width="60%/"></div></li></ul><ol start="5"><li>打开QT里的编译器设置，手动添加gcc,路径就是你前面查找的，具体就是下面两张图。设置完后点应用。<div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/centos7安装QT及环境配置/5.4l9lse48f7c0.jpg" width="60%/"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/centos7安装QT及环境配置/6.2p6xnaktsni0.jpg" width="60%/"></div></li><li>回到kit，设置一下compiler和QT version，然后点击Apply。<div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/centos7安装QT及环境配置/7.72ch9al9tvc0.jpg" width="60%/"></div></li><li>这时候可以打开一个例子试试，build一下，发现还是有问题，报错“ cannot find -lGL”；<div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/centos7安装QT及环境配置/8.3wp797r848m0.jpg" width="60%/"></div>原因在于QT寻找的libGL路径和centos自带的libGL路径不一致，且名称有点区别，所以需要加一个软链接。输入命令：locate libGL ，查看系统libGL的路径和名称，这里选第一个libGL.so.1。<div align="center"><img src="https://cdn.jsdelivr.net/gh/fight-ing-go/image_repository@master/centos7安装QT及环境配置/9.7jiqgedk3000.jpg" width="60%/"></div>创建链接：# ln -s /usr/lib64/libGL.so.1 /usr/lib/libGL.so 需要root权限，可使用sudo su命令进入root。创建成功后再次build，发现成功啦。</li></ol><p>这就是centos7安装QT的全过程了。因为第一次用linux系统，安装个QT就浪费我两天，不停试错，心累，于是搞好后赶忙在这记录一下，留待备用。</p><p>备注：这里还有一个问题是：设置好的kit会有警告：the abi of selected debugger does not match the toolchain abi，是关于debugger的，这是因为自带的gdb版本低了，换个高些的版本就ok了。</p>]]></content>
+    
+    
+    <summary type="html">&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;正常下载安装QT&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;打开QT，打开工具-&amp;gt;选项-&amp;gt;Kits，手动添加一个kit(不懂为啥自动检测出来的都不好使，我就全部都手动添加了)，名称和自动的一样就好。&lt;/p&gt;&lt;/li&gt;&lt;/ol&gt;</summary>
+    
+    
+    
+    <category term="安装于环境配置" scheme="https://easyboy-blog.com/categories/%E5%AE%89%E8%A3%85%E4%BA%8E%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    
+    
+    <category term="linux" scheme="https://easyboy-blog.com/tags/linux/"/>
+    
+    <category term="QT" scheme="https://easyboy-blog.com/tags/QT/"/>
+    
+  </entry>
   
   <entry>
     <title>时序数据异常检测流程与项目实战</title>
@@ -34,11 +60,11 @@
     <category term="机器学习" scheme="https://easyboy-blog.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="机器学习" scheme="https://easyboy-blog.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-    
     <category term="时序数据" scheme="https://easyboy-blog.com/tags/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE/"/>
     
     <category term="异常处理" scheme="https://easyboy-blog.com/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/"/>
+    
+    <category term="机器学习" scheme="https://easyboy-blog.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
