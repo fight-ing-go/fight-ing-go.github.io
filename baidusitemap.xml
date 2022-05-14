@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://easyboy-blog.com/collective-anomaly-and-dbscan.html</loc>
+    <lastmod>2022-05-14</lastmod>
+  </url>
+  <url>
     <loc>https://easyboy-blog.com/installing-mariadb-with-bat-in-windows-7-environment.html</loc>
     <lastmod>2022-04-30</lastmod>
   </url>
