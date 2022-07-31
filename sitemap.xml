@@ -2,18 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://easyboy-blog.com/multithreaded-development.html</loc>
+    <loc>https://easyboy-blog.com/machine-learning-notes.html</loc>
     
-    <lastmod>2022-07-22</lastmod>
+    <lastmod>2022-07-31</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://easyboy-blog.com/correlation-analysis.html</loc>
+    <loc>https://easyboy-blog.com/multithreaded-development.html</loc>
     
-    <lastmod>2022-06-05</lastmod>
+    <lastmod>2022-07-22</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -68,15 +68,6 @@
     <loc>https://easyboy-blog.com/compilation-process.html</loc>
     
     <lastmod>2022-04-16</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://easyboy-blog.com/machine-learning-notes.html</loc>
-    
-    <lastmod>2022-03-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -203,13 +194,6 @@
   </url>
   
   <url>
-    <loc>https://easyboy-blog.com/tags/%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0/</loc>
-    <lastmod>2022-07-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://easyboy-blog.com/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
     <lastmod>2022-07-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -241,13 +225,6 @@
   
   <url>
     <loc>https://easyboy-blog.com/categories/%E5%90%8E%E5%8F%B0%E5%BC%80%E5%8F%91/</loc>
-    <lastmod>2022-07-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://easyboy-blog.com/categories/%E5%BC%82%E5%B8%B8%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2022-07-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
