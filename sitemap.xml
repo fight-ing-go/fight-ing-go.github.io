@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://easyboy-blog.com/network-communications-3.html</loc>
+    <loc>https://easyboy-blog.com/network-communications-2.html</loc>
     
     <lastmod>2022-08-01</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>https://easyboy-blog.com/network-communications-2.html</loc>
+    <loc>https://easyboy-blog.com/network-communications-3.html</loc>
     
     <lastmod>2022-08-01</lastmod>
     
@@ -239,13 +239,6 @@
   </url>
   
   <url>
-    <loc>https://easyboy-blog.com/tags/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/</loc>
-    <lastmod>2022-08-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://easyboy-blog.com/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
     <lastmod>2022-08-01</lastmod>
     <changefreq>weekly</changefreq>
@@ -253,7 +246,14 @@
   </url>
   
   <url>
-    <loc>https://easyboy-blog.com/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/</loc>
+    <loc>https://easyboy-blog.com/tags/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/</loc>
+    <lastmod>2022-08-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://easyboy-blog.com/tags/TCP-IP/</loc>
     <lastmod>2022-08-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -268,13 +268,6 @@
   
   <url>
     <loc>https://easyboy-blog.com/tags/QT/</loc>
-    <lastmod>2022-08-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://easyboy-blog.com/tags/TCP-IP/</loc>
     <lastmod>2022-08-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
