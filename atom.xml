@@ -3,11 +3,11 @@
   <title>home-laser</title>
   
   
-  <link href="https://easyboy-blog.com/atom.xml" rel="self"/>
+  <link href="https://haochendaily.com/atom.xml" rel="self"/>
   
-  <link href="https://easyboy-blog.com/"/>
+  <link href="https://haochendaily.com/"/>
   <updated>2022-08-01T13:33:26.393Z</updated>
-  <id>https://easyboy-blog.com/</id>
+  <id>https://haochendaily.com/</id>
   
   <author>
     <name>laser</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Linux网络通信基础（2）</title>
-    <link href="https://easyboy-blog.com/network-communications-2.html"/>
-    <id>https://easyboy-blog.com/network-communications-2.html</id>
+    <link href="https://haochendaily.com/network-communications-2.html"/>
+    <id>https://haochendaily.com/network-communications-2.html</id>
     <published>2022-08-01T13:09:20.775Z</published>
     <updated>2022-08-01T13:33:26.393Z</updated>
     
@@ -33,17 +33,17 @@
     
     
     
-    <category term="网络通信" scheme="https://easyboy-blog.com/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
+    <category term="网络通信" scheme="https://haochendaily.com/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
     
     
-    <category term="网络通信" scheme="https://easyboy-blog.com/tags/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
+    <category term="网络通信" scheme="https://haochendaily.com/tags/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
     
   </entry>
   
   <entry>
     <title>Linux网络通信基础（3）</title>
-    <link href="https://easyboy-blog.com/network-communications-3.html"/>
-    <id>https://easyboy-blog.com/network-communications-3.html</id>
+    <link href="https://haochendaily.com/network-communications-3.html"/>
+    <id>https://haochendaily.com/network-communications-3.html</id>
     <published>2022-08-01T13:09:20.775Z</published>
     <updated>2022-08-01T13:26:27.825Z</updated>
     
@@ -61,17 +61,17 @@
     
     
     
-    <category term="网络通信" scheme="https://easyboy-blog.com/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
+    <category term="网络通信" scheme="https://haochendaily.com/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
     
     
-    <category term="网络通信" scheme="https://easyboy-blog.com/tags/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
+    <category term="网络通信" scheme="https://haochendaily.com/tags/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
     
   </entry>
   
   <entry>
     <title>Linux网络通信基础（1）</title>
-    <link href="https://easyboy-blog.com/network-communications-1.html"/>
-    <id>https://easyboy-blog.com/network-communications-1.html</id>
+    <link href="https://haochendaily.com/network-communications-1.html"/>
+    <id>https://haochendaily.com/network-communications-1.html</id>
     <published>2022-08-01T13:08:34.723Z</published>
     <updated>2022-08-01T13:20:56.901Z</updated>
     
@@ -86,17 +86,17 @@
     
     
     
-    <category term="网络通信" scheme="https://easyboy-blog.com/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
+    <category term="网络通信" scheme="https://haochendaily.com/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
     
     
-    <category term="网络通信" scheme="https://easyboy-blog.com/tags/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
+    <category term="网络通信" scheme="https://haochendaily.com/tags/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
     
   </entry>
   
   <entry>
     <title>Linux多进程的一些知识点</title>
-    <link href="https://easyboy-blog.com/multiprocess-development.html"/>
-    <id>https://easyboy-blog.com/multiprocess-development.html</id>
+    <link href="https://haochendaily.com/multiprocess-development.html"/>
+    <id>https://haochendaily.com/multiprocess-development.html</id>
     <published>2022-07-31T14:48:25.769Z</published>
     <updated>2022-07-03T16:00:00.000Z</updated>
     
@@ -110,19 +110,19 @@
     
     
     
-    <category term="后台开发" scheme="https://easyboy-blog.com/categories/%E5%90%8E%E5%8F%B0%E5%BC%80%E5%8F%91/"/>
+    <category term="后台开发" scheme="https://haochendaily.com/categories/%E5%90%8E%E5%8F%B0%E5%BC%80%E5%8F%91/"/>
     
     
-    <category term="多进程" scheme="https://easyboy-blog.com/tags/%E5%A4%9A%E8%BF%9B%E7%A8%8B/"/>
+    <category term="多进程" scheme="https://haochendaily.com/tags/%E5%A4%9A%E8%BF%9B%E7%A8%8B/"/>
     
-    <category term="Linux" scheme="https://easyboy-blog.com/tags/Linux/"/>
+    <category term="Linux" scheme="https://haochendaily.com/tags/Linux/"/>
     
   </entry>
   
   <entry>
     <title>浏览器中输入一条URL到页面显示的过程</title>
-    <link href="https://easyboy-blog.com/website-communication.html"/>
-    <id>https://easyboy-blog.com/website-communication.html</id>
+    <link href="https://haochendaily.com/website-communication.html"/>
+    <id>https://haochendaily.com/website-communication.html</id>
     <published>2022-07-31T13:11:25.912Z</published>
     <updated>2022-07-30T16:00:00.000Z</updated>
     
@@ -133,17 +133,17 @@
     
     
     
-    <category term="网络通信" scheme="https://easyboy-blog.com/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
+    <category term="网络通信" scheme="https://haochendaily.com/categories/%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1/"/>
     
     
-    <category term="TCP/IP" scheme="https://easyboy-blog.com/tags/TCP-IP/"/>
+    <category term="TCP/IP" scheme="https://haochendaily.com/tags/TCP-IP/"/>
     
   </entry>
   
   <entry>
     <title>Linux多线程的一些知识点</title>
-    <link href="https://easyboy-blog.com/multithreaded-development.html"/>
-    <id>https://easyboy-blog.com/multithreaded-development.html</id>
+    <link href="https://haochendaily.com/multithreaded-development.html"/>
+    <id>https://haochendaily.com/multithreaded-development.html</id>
     <published>2022-07-23T08:37:03.298Z</published>
     <updated>2022-07-22T16:00:00.000Z</updated>
     
@@ -160,17 +160,17 @@
     
     
     
-    <category term="后台开发" scheme="https://easyboy-blog.com/categories/%E5%90%8E%E5%8F%B0%E5%BC%80%E5%8F%91/"/>
+    <category term="后台开发" scheme="https://haochendaily.com/categories/%E5%90%8E%E5%8F%B0%E5%BC%80%E5%8F%91/"/>
     
     
-    <category term="多线程" scheme="https://easyboy-blog.com/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    <category term="多线程" scheme="https://haochendaily.com/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
     
   </entry>
   
   <entry>
     <title>时间序列集体异常检测与DBSCAN实战</title>
-    <link href="https://easyboy-blog.com/collective-anomaly-and-dbscan.html"/>
-    <id>https://easyboy-blog.com/collective-anomaly-and-dbscan.html</id>
+    <link href="https://haochendaily.com/collective-anomaly-and-dbscan.html"/>
+    <id>https://haochendaily.com/collective-anomaly-and-dbscan.html</id>
     <published>2022-05-14T10:22:06.284Z</published>
     <updated>2022-05-14T13:09:03.492Z</updated>
     
@@ -184,19 +184,19 @@
     
     
     
-    <category term="机器学习" scheme="https://easyboy-blog.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    <category term="机器学习" scheme="https://haochendaily.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="集体异常" scheme="https://easyboy-blog.com/tags/%E9%9B%86%E4%BD%93%E5%BC%82%E5%B8%B8/"/>
+    <category term="集体异常" scheme="https://haochendaily.com/tags/%E9%9B%86%E4%BD%93%E5%BC%82%E5%B8%B8/"/>
     
-    <category term="子序列聚类" scheme="https://easyboy-blog.com/tags/%E5%AD%90%E5%BA%8F%E5%88%97%E8%81%9A%E7%B1%BB/"/>
+    <category term="子序列聚类" scheme="https://haochendaily.com/tags/%E5%AD%90%E5%BA%8F%E5%88%97%E8%81%9A%E7%B1%BB/"/>
     
   </entry>
   
   <entry>
     <title>Windows7环境bat安装mariadb</title>
-    <link href="https://easyboy-blog.com/installing-mariadb-with-bat-in-windows-7-environment.html"/>
-    <id>https://easyboy-blog.com/installing-mariadb-with-bat-in-windows-7-environment.html</id>
+    <link href="https://haochendaily.com/installing-mariadb-with-bat-in-windows-7-environment.html"/>
+    <id>https://haochendaily.com/installing-mariadb-with-bat-in-windows-7-environment.html</id>
     <published>2022-04-30T12:22:29.016Z</published>
     <updated>2022-04-30T13:09:24.379Z</updated>
     
@@ -207,19 +207,19 @@
     
     
     
-    <category term="安装与环境配置" scheme="https://easyboy-blog.com/categories/%E5%AE%89%E8%A3%85%E4%B8%8E%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    <category term="安装与环境配置" scheme="https://haochendaily.com/categories/%E5%AE%89%E8%A3%85%E4%B8%8E%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
     
     
-    <category term="mariadb" scheme="https://easyboy-blog.com/tags/mariadb/"/>
+    <category term="mariadb" scheme="https://haochendaily.com/tags/mariadb/"/>
     
-    <category term="bat批处理" scheme="https://easyboy-blog.com/tags/bat%E6%89%B9%E5%A4%84%E7%90%86/"/>
+    <category term="bat批处理" scheme="https://haochendaily.com/tags/bat%E6%89%B9%E5%A4%84%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>时间序列特征工程</title>
-    <link href="https://easyboy-blog.com/characteristic-engineering-of-time-series.html"/>
-    <id>https://easyboy-blog.com/characteristic-engineering-of-time-series.html</id>
+    <link href="https://haochendaily.com/characteristic-engineering-of-time-series.html"/>
+    <id>https://haochendaily.com/characteristic-engineering-of-time-series.html</id>
     <published>2022-04-23T06:50:40.006Z</published>
     <updated>2022-04-23T12:19:22.937Z</updated>
     
@@ -230,21 +230,21 @@
     
     
     
-    <category term="机器学习" scheme="https://easyboy-blog.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    <category term="机器学习" scheme="https://haochendaily.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="机器学习" scheme="https://easyboy-blog.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    <category term="时间序列" scheme="https://haochendaily.com/tags/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97/"/>
     
-    <category term="时间序列" scheme="https://easyboy-blog.com/tags/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97/"/>
+    <category term="特征工程" scheme="https://haochendaily.com/tags/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/"/>
     
-    <category term="特征工程" scheme="https://easyboy-blog.com/tags/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/"/>
+    <category term="机器学习" scheme="https://haochendaily.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
   <entry>
     <title>centos7安装QT及环境配置</title>
-    <link href="https://easyboy-blog.com/centos7-an-zhuang-qt-ji-huan-jing-pei-zhi.html"/>
-    <id>https://easyboy-blog.com/centos7-an-zhuang-qt-ji-huan-jing-pei-zhi.html</id>
+    <link href="https://haochendaily.com/centos7-an-zhuang-qt-ji-huan-jing-pei-zhi.html"/>
+    <id>https://haochendaily.com/centos7-an-zhuang-qt-ji-huan-jing-pei-zhi.html</id>
     <published>2022-04-20T11:53:04.832Z</published>
     <updated>2022-04-23T06:52:10.807Z</updated>
     
@@ -258,19 +258,19 @@
     
     
     
-    <category term="安装与环境配置" scheme="https://easyboy-blog.com/categories/%E5%AE%89%E8%A3%85%E4%B8%8E%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    <category term="安装与环境配置" scheme="https://haochendaily.com/categories/%E5%AE%89%E8%A3%85%E4%B8%8E%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
     
     
-    <category term="linux" scheme="https://easyboy-blog.com/tags/linux/"/>
+    <category term="linux" scheme="https://haochendaily.com/tags/linux/"/>
     
-    <category term="QT" scheme="https://easyboy-blog.com/tags/QT/"/>
+    <category term="QT" scheme="https://haochendaily.com/tags/QT/"/>
     
   </entry>
   
   <entry>
     <title>时序数据异常检测流程与项目实战</title>
-    <link href="https://easyboy-blog.com/anomaly-detection-process.html"/>
-    <id>https://easyboy-blog.com/anomaly-detection-process.html</id>
+    <link href="https://haochendaily.com/anomaly-detection-process.html"/>
+    <id>https://haochendaily.com/anomaly-detection-process.html</id>
     <published>2022-03-25T12:23:25.727Z</published>
     <updated>2022-04-29T16:00:00.000Z</updated>
     
@@ -282,21 +282,21 @@
     
     
     
-    <category term="机器学习" scheme="https://easyboy-blog.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    <category term="机器学习" scheme="https://haochendaily.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="时序数据" scheme="https://easyboy-blog.com/tags/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE/"/>
+    <category term="机器学习" scheme="https://haochendaily.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
-    <category term="异常处理" scheme="https://easyboy-blog.com/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/"/>
+    <category term="时序数据" scheme="https://haochendaily.com/tags/%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE/"/>
     
-    <category term="机器学习" scheme="https://easyboy-blog.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    <category term="异常处理" scheme="https://haochendaily.com/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>c/c++编译流程</title>
-    <link href="https://easyboy-blog.com/compilation-process.html"/>
-    <id>https://easyboy-blog.com/compilation-process.html</id>
+    <link href="https://haochendaily.com/compilation-process.html"/>
+    <id>https://haochendaily.com/compilation-process.html</id>
     <published>2022-03-20T08:26:46.597Z</published>
     <updated>2022-04-16T13:22:50.148Z</updated>
     
@@ -312,17 +312,17 @@
     
     
     
-    <category term="c++" scheme="https://easyboy-blog.com/categories/c/"/>
+    <category term="c++" scheme="https://haochendaily.com/categories/c/"/>
     
     
-    <category term="c++" scheme="https://easyboy-blog.com/tags/c/"/>
+    <category term="c++" scheme="https://haochendaily.com/tags/c/"/>
     
   </entry>
   
   <entry>
     <title>机器学习笔记</title>
-    <link href="https://easyboy-blog.com/machine-learning-notes.html"/>
-    <id>https://easyboy-blog.com/machine-learning-notes.html</id>
+    <link href="https://haochendaily.com/machine-learning-notes.html"/>
+    <id>https://haochendaily.com/machine-learning-notes.html</id>
     <published>2022-03-14T07:16:30.553Z</published>
     <updated>2022-07-31T13:14:07.180Z</updated>
     
@@ -339,10 +339,10 @@
     
     
     
-    <category term="机器学习" scheme="https://easyboy-blog.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    <category term="机器学习" scheme="https://haochendaily.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="机器学习" scheme="https://easyboy-blog.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    <category term="机器学习" scheme="https://haochendaily.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
